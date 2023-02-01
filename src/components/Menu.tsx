@@ -1,7 +1,8 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import styles from '@/styles/Menu.module.css'
 import logo from '@/img/logo.png'
-import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
 
 interface MenuProps { 
     isAuth: boolean;
@@ -17,7 +18,7 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                     </div>
                     <div className="text-right">
                         {
-                            isAuth ? 
+                            !isAuth ? 
                             <>
                                 <input type="checkbox" className="hidden" id={styles["account-drop"]} />
                                 <label htmlFor={styles["account-drop"]}>
@@ -33,7 +34,11 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                                 </div>
                             </>
                             :
-                            <></>
+                            <>
+                                <div className="cursor-pointer hover:text-pizza-200 flex items-center justify-end">
+                                    Have an account? Login here! <ArrowRightOnRectangleIcon className="ml-2 inline h-5 w-5" />
+                                </div>
+                            </>
                         }
                     </div>
                 </div>
@@ -54,21 +59,22 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                         </label>
                         <div className={styles.navLinks}>
                             <ul>
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Contact Us</a></li>
+                                <li><Link href="/">Home</Link></li>
+                                <li><Link href="#">Products</Link></li>
+                                <li><Link href="/about">About Us</Link></li>
+                                <li><Link href="/contact">Contact Us</Link></li>
                             </ul>
                         </div>
                     </div>
                     <div className={styles.navMenuCart}>
-                        <input type="checkbox" id={styles['cart-button']} />
+                        <input className="hidden" type="checkbox" id={styles['cart-button']} />
                         <label htmlFor={styles['cart-button']}>
                             <div className={styles.cartBtn}>
-                                <div className="rounded-full bg-red-600 text-xs absolute w-5 h-5 flex items-center justify-center top-0 right-0 text-white">
+                                <div id={styles['cart-count']} className="rounded-full bg-red-600 text-xs absolute w-5 h-5 flex items-center justify-center top-0 right-0 text-white">
                                     1
                                 </div>
-                                <ShoppingCartIcon className="h-7 w-7 inline" />
+                                <ShoppingCartIcon id={styles['cart-icon']} className="h-6 w-6 md:h-7 md:w-7 inline" />
+                                <XMarkIcon id={styles['close-cart']} className="h-6 w-6 md:h-7 md:w-7 inline" />
                             </div>
                         </label>
                         <div className={styles.cartList}></div>

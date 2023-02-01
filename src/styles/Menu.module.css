@@ -27,11 +27,11 @@
 }
 
 .navMenuInner {
-  @apply px-2 relative md:w-5/6 lg:w-3/4 mx-auto grid grid-cols-12 py-3;
+  @apply px-2 relative md:w-5/6 lg:w-3/4 mx-auto grid grid-cols-12 py-4;
 }
 
 .navMenuBar {
-  @apply col-span-2 md:col-span-6 order-1 md:order-2 flex items-center justify-start md:justify-center;
+  @apply col-span-2 md:col-span-7 order-1 md:order-2 flex items-center justify-start md:justify-center;
 }
 
 .navLinks {
@@ -71,7 +71,7 @@
 }
 
 #hamburger:checked ~ label .navHamburger {
-  @apply absolute z-50 translate-x-full md:z-0;
+  @apply absolute z-50 translate-x-full -translate-y-20 md:z-0;
 }
 
 #hamburger:checked ~ .navLinks {
@@ -79,20 +79,41 @@
 }
 
 .navMenuLogo {
-  @apply col-span-8 md:col-span-3 order-2 md:order-1 flex items-center justify-center;
+  @apply col-span-8 md:col-span-3 order-2 md:order-1 flex items-center justify-center py-6;
 }
 
 .navMenuCart {
-  @apply col-span-2 md:col-span-3 order-3 md:order-3 flex items-center justify-end;
+  @apply col-span-2 md:col-span-2 order-3 md:order-3 flex items-center justify-end;
 }
 
 .cartBtn {
-  @apply rounded-full text-pizza-700 hover:text-white hover:bg-pizza-700 transition-all ease-in-out duration-300 p-3 cursor-pointer relative;
+  @apply rounded-full text-pizza-700 hover:text-white hover:bg-pizza-700 transition-all ease-in-out duration-300 p-2 cursor-pointer relative md:p-3;
 }
 
-#cart-button {
+.cartList {
+  @apply fixed h-screen w-screen z-30 top-0 right-0 translate-x-full bg-white md:w-3/5 transition-all ease-in-out duration-300;
 }
 
-/* .cartList {
-  @apply fixed h-screen w-screen bg-white right-0 top-0 md:w-3/5 border-l;
-} */
+#cart-button:checked ~ .cartList {
+  @apply translate-x-0;
+}
+
+#close-cart {
+  @apply hidden;
+}
+
+#cart-button:checked ~ label .cartBtn {
+  @apply fixed z-50 -translate-x-14 -translate-y-20 md:translate-x-2 lg:translate-x-20;
+}
+
+#cart-button:checked ~ label .cartBtn #cart-icon {
+  @apply hidden;
+}
+
+#cart-button:checked ~ label .cartBtn #close-cart {
+  @apply block;
+}
+
+#cart-button:checked ~ label .cartBtn #cart-count {
+  @apply hidden;
+}

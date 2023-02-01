@@ -1,0 +1,7 @@
+.aboutSection {
+  @apply py-4 md:py-24;
+}
+
+.aboutInnerSection {
+  @apply md:w-5/6 lg:w-3/4 mx-auto p-2;
+}

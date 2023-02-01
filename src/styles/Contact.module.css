@@ -1,0 +1,7 @@
+.contact {
+  @apply mt-4 block;
+}
+
+.contactInner {
+  @apply md:w-5/6 lg:w-3/4 mx-auto p-2;
+}

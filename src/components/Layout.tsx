@@ -4,6 +4,7 @@ import { Inter } from '@next/font/google';
 
 //components
 import Menu from './Menu';
+import Footer from './Footer';
 
 interface LayoutProps {
     children: ReactNode
@@ -24,9 +25,13 @@ export default function Layout({ children, isAuth }: LayoutProps) {
                 <meta name="language" content="English" />
                 <meta name="revisit-after" content="30 days" />
             </Head>
-            <Menu isAuth />
+            
             <div className={inter.className}>
+                <div className="min-h-screen">
+                <Menu isAuth />
                 {children}
+                <Footer isAuth />
+                </div>
             </div>
         </>
     )

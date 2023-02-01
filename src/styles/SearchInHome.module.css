@@ -1,0 +1,11 @@
+.searchSection {
+  @apply mb-20 sm:bg-white md:bg-transparent;
+}
+
+.searchSectionInner {
+  @apply py-24 md:w-5/6 lg:w-3/4 mx-auto px-2 flex flex-col items-center justify-center;
+}
+
+.searchInput {
+  @apply bg-slate-300 rounded-full p-1;
+}

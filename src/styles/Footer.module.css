@@ -1,0 +1,7 @@
+.footerInfo {
+  @apply py-4 px-2 md:w-5/6 lg:w-3/4 space-y-2 md:space-y-0 md:space-x-1 grid grid-cols-2 md:grid-cols-12 mx-auto;
+}
+
+.footerCredits {
+  @apply p-2 md:w-5/6 lg:w-3/4 text-white mx-auto;
+}
