@@ -1,0 +1,98 @@
+.menu {
+  @apply bg-pizza-700 text-white;
+}
+
+.innerMenu {
+  @apply grid grid-cols-2 md:w-5/6 lg:w-3/4 mx-auto p-2 relative;
+}
+
+#account-menu {
+  @apply bg-pizza-700 shadow py-2 px-4 w-auto absolute right-1 scale-0 rounded-b-lg origin-top transition-all ease-in-out duration-300 z-20;
+}
+
+#account-menu li {
+  @apply mb-2;
+}
+
+#account-menu li:last-child {
+  margin-bottom: 0;
+}
+
+#account-drop:checked ~ #account-menu {
+  @apply scale-100 mt-2;
+}
+
+.navMenu {
+  @apply bg-white shadow-xl;
+}
+
+.navMenuInner {
+  @apply px-2 relative md:w-5/6 lg:w-3/4 mx-auto grid grid-cols-12 py-3;
+}
+
+.navMenuBar {
+  @apply col-span-2 md:col-span-6 order-1 md:order-2 flex items-center justify-start md:justify-center;
+}
+
+.navLinks {
+  @apply w-screen h-screen fixed top-0 left-0 -translate-x-full transition-all ease-in-out duration-300 md:transition-none md:translate-x-0 bg-white z-30 flex items-center justify-center md:block md:relative md:left-auto md:top-auto md:bg-transparent md:w-auto md:h-auto md:z-auto;
+}
+
+.navLinks ul {
+  list-style: none;
+}
+
+.navLinks ul li {
+  @apply block text-3xl mb-12 md:inline md:text-sm md:mr-4 lg:text-base lg:mr-12;
+}
+
+.navLinks ul li:last-child {
+  @apply mb-0 md:mr-0;
+}
+
+.navLinks ul li a {
+  @apply text-pizza-800;
+}
+
+.navLinks ul li a:hover {
+  @apply text-pizza-700;
+}
+
+.navHamburger {
+  @apply transition-all ease-in-out duration-300 cursor-pointer;
+}
+
+.navHamburger div {
+  @apply w-8 h-1 bg-pizza-700 rounded-xl mb-2 block md:transition-none md:hidden;
+}
+
+.navHamburger div:last-child {
+  margin-bottom: 0;
+}
+
+#hamburger:checked ~ label .navHamburger {
+  @apply absolute z-50 translate-x-full md:z-0;
+}
+
+#hamburger:checked ~ .navLinks {
+  @apply translate-x-0;
+}
+
+.navMenuLogo {
+  @apply col-span-8 md:col-span-3 order-2 md:order-1 flex items-center justify-center;
+}
+
+.navMenuCart {
+  @apply col-span-2 md:col-span-3 order-3 md:order-3 flex items-center justify-end;
+}
+
+.cartBtn {
+  @apply rounded-full text-pizza-700 hover:text-white hover:bg-pizza-700 transition-all ease-in-out duration-300 p-3 cursor-pointer relative;
+}
+
+#cart-button {
+}
+
+/* .cartList {
+  @apply fixed h-screen w-screen bg-white right-0 top-0 md:w-3/5 border-l;
+} */
