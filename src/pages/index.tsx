@@ -32,37 +32,37 @@ export default function Home() {
       id: 1,
       name: 'Coffee',
       slug: 'coffee',
-      icon: <AcademicCapIcon />
+      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
     },
     {
       id: 2,
       name: 'Hot Tea',
       slug: 'hottea',
-      icon: <AcademicCapIcon />
+      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
     },
     {
       id: 1,
       name: 'Milk Tea',
       slug: 'milktea',
-      icon: <AcademicCapIcon />
+      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
     },
     {
       id: 1,
       name: 'Bread',
       slug: 'bread',
-      icon: <AcademicCapIcon />
+      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
     },
     {
       id: 1,
       name: 'Roll Cake',
       slug: 'rollcake',
-      icon: <AcademicCapIcon />
+      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
     },
     {
       id: 1,
       name: 'Pastries',
       slug: 'pastries',
-      icon: <AcademicCapIcon />
+      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
     },
   ]
   return (

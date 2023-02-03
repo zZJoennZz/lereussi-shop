@@ -1,0 +1,23 @@
+.sidebar {
+  @apply block border border-slate-300;
+}
+
+.sidebarInner {
+  @apply py-2 text-slate-700;
+}
+
+.sidebarHeader {
+  @apply text-lg font-bold border-b border-slate-300 pb-2 mb-2 pl-2;
+}
+
+.sidebarByCategoryList {
+  @apply text-sm pl-2;
+}
+
+.sidebarByCategoryList li {
+  @apply mb-2 text-pizza-700 hover:text-slate-600 transition-colors ease-in-out duration-300;
+}
+
+.sidebarByCategoryList li:last-child {
+  margin-bottom: 0;
+}

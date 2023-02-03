@@ -35,7 +35,8 @@
 }
 
 .navLinks {
-  @apply w-screen h-screen fixed top-0 left-0 -translate-x-full transition-all ease-in-out duration-300 md:transition-none md:translate-x-0 bg-white z-30 flex items-center justify-center md:block md:relative md:left-auto md:top-auto md:bg-transparent md:w-auto md:h-auto md:z-auto;
+  @apply w-screen h-screen fixed top-0 left-0 -translate-x-full transition-all ease-in-out duration-300 md:transition-none md:translate-x-0 z-30 flex items-center justify-center md:block md:relative md:left-auto md:top-auto md:bg-transparent md:w-auto md:h-auto md:z-auto;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .navLinks ul {
@@ -71,10 +72,10 @@
 }
 
 #hamburger:checked ~ label .navHamburger {
-  @apply absolute z-50 translate-x-full -translate-y-20 md:z-0;
+  @apply fixed z-50 translate-x-full -translate-y-20 md:z-0;
 }
 
-#hamburger:checked ~ .navLinks {
+#hamburger:checked ~ label .navLinks {
   @apply translate-x-0;
 }
 
@@ -91,11 +92,12 @@
 }
 
 .cartList {
-  @apply fixed h-screen w-screen z-30 top-0 right-0 translate-x-full bg-white md:w-3/5 transition-all ease-in-out duration-300;
+  @apply py-10 overflow-auto fixed h-screen w-screen z-30 top-0 right-0 translate-x-full bg-white md:w-3/5 transition-all ease-in-out duration-300;
 }
 
 #cart-button:checked ~ .cartList {
   @apply translate-x-0;
+  box-shadow: -2px 0 10px #c0c9d6;
 }
 
 #close-cart {
@@ -116,4 +118,8 @@
 
 #cart-button:checked ~ label .cartBtn #cart-count {
   @apply hidden;
+}
+
+.cartItems {
+  @apply bg-white w-11/12 md:w-9/12 mx-auto p-2 md:p-4 rounded-xl border border-slate-300 mb-3 relative;
 }

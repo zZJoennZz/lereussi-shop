@@ -10,11 +10,11 @@ interface FooterProps {
 export default function Footer({ isAuth = true } : FooterProps): JSX.Element {
     return (
         <div>
-            <footer className="w-full bg-white overflow-hidden">
+            <footer className="w-full overflow-hidden">
                 <div className={styles.footerInfo}>
-                    <div className="col-span-1 md:col-span-4 lg:col-span-3 order-1 md:order-1">
+                    <div className="mb-3 md:mb-0 col-span-12 md:col-span-4 lg:col-span-3 order-1 md:order-1">
                         <div className="mb-4">
-                            <Image src={logo} className="w-2/3" alt="Le REUSSI Logo" />
+                            <Image src={logo} priority className="w-2/3" alt="Le REUSSI Logo" />
                         </div>
                         <div className="mb-3 pr-2">
                             <p className="text-justify text-sm text-slate-600">
@@ -44,7 +44,7 @@ export default function Footer({ isAuth = true } : FooterProps): JSX.Element {
                             </svg>
                         </div>
                     </div>
-                    <div className="col-span-1 md:col-span-2 lg:col-span-3 text-slate-600 order-3 md:order-3">
+                    <div className="mb-3 md:mb-0 col-span-6 md:col-span-2 lg:col-span-3 text-slate-600 order-3 md:order-3">
                         <h2 className="text-sm font-bold">Information</h2>
                         <ul className="pl-2 text-sm">
                             <li className="mb-1">About Us</li>
@@ -53,39 +53,43 @@ export default function Footer({ isAuth = true } : FooterProps): JSX.Element {
                             <li>Terms & Conditions</li>
                         </ul>
                     </div>
-                    <div className="col-span-1 md:col-span-2 lg:col-span-2 text-slate-600 order-4 md:order-3">
+                    <div className="col-span-6 md:col-span-2 lg:col-span-2 text-slate-600 order-4 md:order-3">
                         <h2 className="text-sm font-bold">My Account</h2>
                         <ul className="pl-2 text-sm">
                             <li className="mb-1">Settings</li>
                             <li className="mb-1">Logout</li>
                         </ul>
                     </div>
-                    <div className="col-span-1 md:col-span-4 lg:col-span-3 text-slate-600 order-2 md:order-4">
-                        <div className="flex items-center justify-start mb-3">
-                            <div className="bg-pizza-700 text-white p-3 rounded-full mr-3 hover:bg-slate-600 transition-all ease-in-out duration-300">
-                                <PhoneIcon className="inline h-7 w-7" />
-                            </div>
-                            <div className="text-sm">
-                                <div className="font-bold">Contact Us</div>
-                                <div>900 123456789</div>
-                            </div>
-                        </div>
-                        <div className="flex mb-3 items-center justify-start">
-                            <div className="bg-pizza-700 text-white p-3 rounded-full mr-3 hover:bg-slate-600 transition-all ease-in-out duration-300">
-                                <EnvelopeIcon className="inline h-7 w-7" />
-                            </div>
-                            <div className="text-sm">
-                                <div className="font-bold">Email</div>
-                                <div>info@lereussi.com</div>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-start">
-                            <div className="bg-pizza-700 text-white p-3 rounded-full mr-3 hover:bg-slate-600 transition-all ease-in-out duration-300">
-                                <MapPinIcon className="inline h-7 w-7" />
-                            </div>
-                            <div className="text-sm">
-                                <div className="font-bold">Location</div>
-                                <div>Idk St., Quezon City</div>
+                    <div className="col-span-12 md:col-span-4 lg:col-span-3 text-slate-600 order-2 md:order-4">
+                        <div className="md:flex md:justify-end md:w-full">
+                            <div>
+                                <div className="flex items-center justify-start mb-3">
+                                    <div className="bg-pizza-700 text-white p-3 rounded-full mr-3 hover:bg-slate-600 transition-all ease-in-out duration-300">
+                                        <PhoneIcon className="inline h-7 w-7" />
+                                    </div>
+                                    <div className="text-sm">
+                                        <div className="font-bold">Contact Us</div>
+                                        <div>900 123456789</div>
+                                    </div>
+                                </div>
+                                <div className="flex mb-3 items-center justify-start">
+                                    <div className="bg-pizza-700 text-white p-3 rounded-full mr-3 hover:bg-slate-600 transition-all ease-in-out duration-300">
+                                        <EnvelopeIcon className="inline h-7 w-7" />
+                                    </div>
+                                    <div className="text-sm">
+                                        <div className="font-bold">Email</div>
+                                        <div>info@lereussi.com</div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-start">
+                                    <div className="bg-pizza-700 text-white p-3 rounded-full mr-3 hover:bg-slate-600 transition-all ease-in-out duration-300">
+                                        <MapPinIcon className="inline h-7 w-7" />
+                                    </div>
+                                    <div className="text-sm">
+                                        <div className="font-bold">Location</div>
+                                        <div>Idk St., Quezon City</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

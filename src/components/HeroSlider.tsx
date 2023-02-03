@@ -17,7 +17,7 @@ export default function HeroSlider({sliderContent} : HeroSliderProps): JSX.Eleme
         },
         created() {
             setLoaded(true)
-        }
+        },
     })
 
     return (

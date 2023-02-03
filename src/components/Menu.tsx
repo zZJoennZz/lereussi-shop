@@ -1,14 +1,57 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { cartItemsState } from '@/atoms'
 import styles from '@/styles/Menu.module.css'
 import logo from '@/img/logo.png'
-import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightOnRectangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+
+//for testing
+import darkChoco from '@/img/dark-choco.jpg'
 
 interface MenuProps { 
     isAuth: boolean;
 }
 
 export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
+    const cartItems = useRecoilValue(cartItemsState)
+    const setCartItems = useSetRecoilState(cartItemsState)
+
+    const items: any[] = [
+        {
+            id: 1,
+            name: 'Ube Cake',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim praesent elementum facilisis leo vel fringilla est. Iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui. Ultrices sagittis orci a scelerisque purus semper eget duis.',
+            slug: 'ube-cake',
+            category: 'Cake'
+        },
+        {
+            id: 2,
+            name: 'Orange Cake',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim praesent elementum facilisis leo vel fringilla est. Iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui. Ultrices sagittis orci a scelerisque purus semper eget duis.',
+            slug: 'orange-cake',
+            category: 'Cake'
+        },
+        {
+            id: 3,
+            name: 'Cheese Cake',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim praesent elementum facilisis leo vel fringilla est. Iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui. Ultrices sagittis orci a scelerisque purus semper eget duis.',
+            slug: 'cheese-cake',
+            category: 'Cake'
+        },
+    ]
+
+    function removeItem(itemId: number) {
+        if (cartItems.length > 0) {
+            const filteredFromList: any[] = cartItems.filter(i => i.id !== itemId)
+            setCartItems(filteredFromList)
+        }
+    }
+
+    function adjustItem(itemId: number, qty: number) {
+        const filteredFromList: any[] = cartItems.filter(i => i.id === itemId)
+        filteredFromList[0].quantity = qty
+    }
     return (
         <>
             <div className={styles.menu}>
@@ -36,7 +79,7 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                             :
                             <>
                                 <div className="cursor-pointer hover:text-pizza-200 flex items-center justify-end">
-                                    Have an account? Login here! <ArrowRightOnRectangleIcon className="ml-2 inline h-5 w-5" />
+                                    <Link href="/login">Have an account? Login here! <ArrowRightOnRectangleIcon className="ml-2 inline h-5 w-5" /></Link>
                                 </div>
                             </>
                         }
@@ -49,35 +92,59 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                         <Image src={logo} priority alt="Le REUSSI Logo" />
                     </div>
                     <div className={styles.navMenuBar}>
-                        <input className="hidden" type="checkbox" id={styles['hamburger']} aria-hidden />
+                        <input className='hidden' type="checkbox" id={styles['hamburger']} aria-hidden />
                         <label htmlFor={styles['hamburger']}>
                             <div className={styles.navHamburger}>
                                 <div></div>
                                 <div></div>
                                 <div></div>
                             </div>
+                        
+                            <div className={styles.navLinks}>
+                                <ul>
+                                    <li><Link href="/">Home</Link></li>
+                                    <li><Link href="/product">Products</Link></li>
+                                    <li><Link href="/about">About Us</Link></li>
+                                    <li><Link href="/contact">Contact Us</Link></li>
+                                </ul>
+                            </div>
                         </label>
-                        <div className={styles.navLinks}>
-                            <ul>
-                                <li><Link href="/">Home</Link></li>
-                                <li><Link href="#">Products</Link></li>
-                                <li><Link href="/about">About Us</Link></li>
-                                <li><Link href="/contact">Contact Us</Link></li>
-                            </ul>
-                        </div>
                     </div>
                     <div className={styles.navMenuCart}>
                         <input className="hidden" type="checkbox" id={styles['cart-button']} />
                         <label htmlFor={styles['cart-button']}>
                             <div className={styles.cartBtn}>
                                 <div id={styles['cart-count']} className="rounded-full bg-red-600 text-xs absolute w-5 h-5 flex items-center justify-center top-0 right-0 text-white">
-                                    1
+                                    {cartItems.length}
                                 </div>
                                 <ShoppingCartIcon id={styles['cart-icon']} className="h-6 w-6 md:h-7 md:w-7 inline" />
                                 <XMarkIcon id={styles['close-cart']} className="h-6 w-6 md:h-7 md:w-7 inline" />
                             </div>
                         </label>
-                        <div className={styles.cartList}></div>
+                        <div className={styles.cartList}>
+                            {
+                                cartItems.map(item => 
+                                    <div className={styles.cartItems} key={item.id}>
+                                        <span onClick={() => removeItem(item.id)} className="absolute top-0 left-0 bg-white rounded-full"><XCircleIcon className="inline w-7 h-7 text-red-600" /></span>
+                                        <div className="grid grid-cols-12">
+                                            <div className="col-span-4">
+                                                <Image 
+                                                    src={darkChoco}
+                                                    alt="Dark Chocolate"
+                                                    className="w-full rounded-xl"
+                                                />
+                                            </div>
+                                            <div className="col-span-8 px-4">
+                                                <div className="text-xl font-bold text-slate-600">{item.name}</div>
+                                                <div>
+                                                    <label htmlFor="cart-qty" className="mr-2">Quantity:</label><input id="cart-qty" type="number" className="border border-slate-300 p-1 w-10" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
