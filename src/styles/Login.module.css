@@ -1,7 +1,0 @@
-.login {
-  @apply block;
-}
-
-.loginInner {
-  @apply mx-auto relative pl-0 md:pl-2;
-}

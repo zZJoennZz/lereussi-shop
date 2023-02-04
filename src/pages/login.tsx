@@ -1,4 +1,3 @@
-import styles from '@/styles/Login.module.css'
 import Meta from '@/components/Meta'
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
 function Login(): JSX.Element {
@@ -6,8 +5,8 @@ function Login(): JSX.Element {
         <>
             <Meta title='Login | Le REUSSI' />
             <div className="mb-2 md:mb-0">
-                <div className={styles.login}>
-                    <div className={styles.loginInner}>
+                <div className="lws-container">
+                    <div className="lws-container-inner">
                         <div className="border border-slate-300 text-lg p-2 font-bold text-slate-700">
                             Already have an account? Login here!
                         </div>
@@ -19,7 +18,7 @@ function Login(): JSX.Element {
                                             <label htmlFor="username">Username:</label>
                                         </div>
                                         <div>
-                                            <input id="username" type="text" className="textfied" />  
+                                            <input id="username" type="text" className="textfield" />  
                                         </div>
                                     </div>
                                     <div className="mb-3">
@@ -27,7 +26,7 @@ function Login(): JSX.Element {
                                             <label htmlFor="password">Password:</label>
                                         </div>
                                         <div>
-                                            <input id="password" type="password" className="textfied" />  
+                                            <input id="password" type="password" className="textfield" />  
                                         </div>
                                         <div className="mt-2 text-sm text-slate-500">Forgot password? Reset here!</div>
                                     </div>

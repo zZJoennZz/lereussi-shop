@@ -1,7 +1,7 @@
 .aboutSection {
-  @apply py-4 md:py-24;
+  @apply mt-4 block;
 }
 
 .aboutInnerSection {
-  @apply md:w-5/6 lg:w-3/4 mx-auto p-2;
+  @apply md:w-5/6 lg:w-3/4 mx-auto p-2 relative block md:grid md:grid-cols-2;
 }

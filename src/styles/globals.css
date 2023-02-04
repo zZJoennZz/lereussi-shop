@@ -3,9 +3,17 @@
 @tailwind utilities;
 
 .section-title {
-  @apply mb-3 text-2xl font-bold text-slate-600;
+  @apply text-2xl font-bold;
 }
 
-.textfied {
+.textfield {
   @apply w-full outline-none bg-slate-200 border border-slate-300 p-3 rounded-2xl;
+}
+
+.lws-container {
+  @apply block;
+}
+
+.lws-container-inner {
+  @apply mx-auto relative pl-0 md:pl-2;
 }

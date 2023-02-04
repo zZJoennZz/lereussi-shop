@@ -1,0 +1,31 @@
+.productPageHeader {
+  @apply bg-gray-300 p-2 text-slate-700 grid grid-cols-12 mb-3;
+}
+
+.productPageHeaderText {
+  @apply text-lg font-bold col-span-7;
+}
+
+.productsListContainer {
+  @apply grid grid-cols-12;
+}
+
+.productsListCard {
+  @apply flex flex-col items-start justify-center border border-gray-300 p-2 relative shadow-lg shadow-slate-300;
+}
+
+.sortBy {
+  @apply ml-2 w-20 p-1 rounded-lg outline-none border border-slate-400;
+}
+
+.addToCartBtn {
+  @apply bg-pottersclay hover:bg-transparent border border-pottersclay text-white hover:text-pottersclay transition-all ease-in-out duration-300 text-sm flex items-center justify-center p-1 rounded w-full;
+}
+
+.viewDetailBtn {
+  @apply bg-gumbo hover:bg-transparent border border-gumbo text-white hover:text-gumbo transition-all ease-in-out duration-300 text-sm flex items-center justify-center p-1 rounded w-full;
+}
+
+.productListingPrice {
+  @apply text-amber-800;
+}

@@ -92,12 +92,12 @@
 }
 
 .cartList {
-  @apply py-10 overflow-auto fixed h-screen w-screen z-30 top-0 right-0 translate-x-full bg-white md:w-3/5 transition-all ease-in-out duration-300;
+  @apply py-10 overflow-auto fixed h-screen w-screen z-30 top-0 right-0 translate-x-full md:w-3/5 transition-all ease-in-out duration-300;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 #cart-button:checked ~ .cartList {
   @apply translate-x-0;
-  box-shadow: -2px 0 10px #c0c9d6;
 }
 
 #close-cart {

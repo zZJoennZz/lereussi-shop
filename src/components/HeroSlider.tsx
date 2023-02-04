@@ -26,7 +26,7 @@ export default function HeroSlider({sliderContent} : HeroSliderProps): JSX.Eleme
                 <div ref={sliderRef} className="keen-slider">
                     {
                         sliderContent.map(slider => 
-                                <div key={`slider${slider.backgroundImg}`} className="keen-slider__slide bg-cover bg-center grid grid-cols-1 md:grid-cols-2" style={{ background: `linear-gradient(0deg, rgba(23, 23, 23, 0.5), rgba(153, 140, 116, 0.5)), url(${slider.backgroundImg})`, height: '50vh'}}>
+                                <div key={`slider${slider.backgroundImg}`} className="keen-slider__slide bg-no-repeat grid grid-cols-1 md:grid-cols-2" style={{ backgroundImage: `linear-gradient(0deg, rgba(23, 23, 23, 0.5), rgba(153, 140, 116, 0.5)), url(${slider.backgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', height: '50vh'}}>
                                     <div className="h-0 md:h-auto order-2 md:order-1"></div>
                                     <div className="flex flex-col order-1 md:order-2 justify-center p-4 md:p-0">
                                         <div className="flex mb-3">

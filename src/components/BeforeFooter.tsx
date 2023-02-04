@@ -6,7 +6,7 @@ export default function BeforeFooter(): JSX.Element {
         <div className={styles.beforeFooter}>
             <div className={styles.innerBeforeFooter}>
                 <div className="group cursor-pointer">
-                    <div className="text-pizza-700 group-hover:text-slate-600 transition-all ease-in-out duration-300">
+                    <div className="text-gumbo group-hover:text-slate-600 transition-all ease-in-out duration-300">
                         <QuestionMarkCircleIcon className="w-20 h-20 mx-auto mb-4" />
                     </div>
                     <div className="font-bold text-slate-600">
@@ -17,7 +17,7 @@ export default function BeforeFooter(): JSX.Element {
                     </div>
                 </div>
                 <div className="group cursor-pointer">
-                    <div className="text-pizza-700 group-hover:text-slate-600 transition-all ease-in-out duration-300">
+                    <div className="text-gumbo group-hover:text-slate-600 transition-all ease-in-out duration-300">
                         <GiftIcon className="w-20 h-20 mx-auto mb-4" />
                     </div>
                     <div className="font-bold">
@@ -28,7 +28,7 @@ export default function BeforeFooter(): JSX.Element {
                     </div>
                 </div>
                 <div className="group cursor-pointer">
-                    <div className="text-pizza-700 group-hover:text-slate-600 transition-all ease-in-out duration-300">
+                    <div className="text-gumbo group-hover:text-slate-600 transition-all ease-in-out duration-300">
                         <ShoppingBagIcon className="w-20 h-20 mx-auto mb-4" />
                     </div>
                     <div className="font-bold">
@@ -39,7 +39,7 @@ export default function BeforeFooter(): JSX.Element {
                     </div>
                 </div>
                 <div className="group cursor-pointer">
-                    <div className="text-pizza-700 group-hover:text-slate-600 transition-all ease-in-out duration-300">
+                    <div className="text-gumbo group-hover:text-slate-600 transition-all ease-in-out duration-300">
                         <BuildingStorefrontIcon className="w-20 h-20 mx-auto mb-4" />
                     </div>
                     <div className="font-bold">
