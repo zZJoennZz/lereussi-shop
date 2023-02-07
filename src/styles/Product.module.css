@@ -19,11 +19,11 @@
 }
 
 .addToCartBtn {
-  @apply bg-pottersclay hover:bg-transparent border border-pottersclay text-white hover:text-pottersclay transition-all ease-in-out duration-300 text-sm flex items-center justify-center p-1 rounded w-full;
+  @apply bg-pottersclay hover:bg-transparent border border-pottersclay text-white hover:text-pottersclay transition-all ease-in-out duration-300 text-sm flex items-center justify-center py-1 rounded w-full;
 }
 
 .viewDetailBtn {
-  @apply bg-gumbo hover:bg-transparent border border-gumbo text-white hover:text-gumbo transition-all ease-in-out duration-300 text-sm flex items-center justify-center p-1 rounded w-full;
+  @apply bg-gumbo hover:bg-transparent border border-gumbo text-white hover:text-gumbo transition-all ease-in-out duration-300 text-sm flex items-center justify-center py-1 rounded w-full;
 }
 
 .productListingPrice {

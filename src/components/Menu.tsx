@@ -1,35 +1,32 @@
+import { useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { cartItemsState } from '@/atoms'
+import CartCard from './CartCard'
+
 import styles from '@/styles/Menu.module.css'
+import { Cart } from '@/types'
 import logo from '@/img/logo.png'
 import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightOnRectangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 
-//for testing
-import darkChoco from '@/img/dark-choco.jpg'
+import { useRecoilState } from 'recoil'
+import { cartItemsState } from '@/atoms'
 
 interface MenuProps { 
     isAuth: boolean;
 }
 
 export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
-    const cartItems = useRecoilValue(cartItemsState)
-    const setCartItems = useSetRecoilState(cartItemsState)
+    const [cartItems, setCartItems] = useRecoilState(cartItemsState)
 
     // const items: any[] = itemList
 
-    function removeItem(itemId: number) {
-        if (cartItems.length > 0) {
-            const filteredFromList: any[] = cartItems.filter(i => i.id !== itemId)
-            setCartItems(filteredFromList)
+    useEffect(() => {
+        const cartData = JSON.parse(localStorage.getItem("cart") || "");
+        if (cartData.length > 0) {
+            setCartItems(cartData);
         }
-    }
+    }, [setCartItems]);
 
-    function adjustItem(itemId: number, qty: number) {
-        const filteredFromList: any[] = cartItems.filter(i => i.id === itemId)
-        filteredFromList[0].quantity = qty
-    }
     return (
         <>
             <div className={styles.menu}>
@@ -101,26 +98,11 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                         </label>
                         <div className={styles.cartList}>
                             {
-                                cartItems.map(item => 
-                                    <div className={styles.cartItems} key={item.id}>
-                                        <span onClick={() => removeItem(item.id)} className="absolute top-0 left-0 bg-white rounded-full"><XCircleIcon className="inline w-7 h-7 text-red-600" /></span>
-                                        <div className="grid grid-cols-12">
-                                            <div className="col-span-4">
-                                                <Image 
-                                                    src={darkChoco}
-                                                    alt="Dark Chocolate"
-                                                    className="w-full rounded-xl"
-                                                />
-                                            </div>
-                                            <div className="col-span-8 px-4">
-                                                <div className="text-xl font-bold text-slate-600">{item.name}</div>
-                                                <div>
-                                                    <label htmlFor="cart-qty" className="mr-2">Quantity:</label><input id="cart-qty" type="number" className="border border-slate-300 p-1 w-10" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                cartItems.length > 0 ? cartItems.map((item: Cart) => 
+                                    <CartCard cartInfo={item} key={item.id} />
                                 )
+                                :
+                                <div className="text-center text-3xl text-gray-400 italic">You cart is empty.</div>
                             }
                         </div>
                     </div>

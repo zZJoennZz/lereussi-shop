@@ -4,4 +4,6 @@ export interface Product {
   description: string;
   slug: string;
   category: string;
+  price: number;
+  salePrice: number;
 }
