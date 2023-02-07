@@ -7,7 +7,7 @@
 }
 
 .textfield {
-  @apply w-full outline-none bg-slate-200 border border-slate-300 p-3 rounded-2xl;
+  @apply w-full bg-slate-200 border border-slate-300 p-3 rounded-2xl;
 }
 
 .lws-container {
@@ -16,4 +16,12 @@
 
 .lws-container-inner {
   @apply mx-auto relative pl-0 md:pl-2;
+}
+
+.container-outer {
+  @apply w-full;
+}
+
+.container-inner {
+  @apply md:w-5/6 lg:w-3/4 mx-auto p-2 relative block;
 }

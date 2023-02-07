@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { LayoutProps, Category } from '@/types';
 import { Inter } from '@next/font/google';
 import Sidebar from './Sidebar';
@@ -48,7 +47,7 @@ export default function LayoutWithSidebar({ children, isAuth }: LayoutProps) {
         <>
           <div className={inter.className}>
               <Menu isAuth />
-              <div className="min-h-screen md:w-5/6 lg:w-3/4 mx-auto p-2">
+              <div className="min-h-screen md:w-5/6 lg:w-3/4 mx-auto p-2 mt-3">
                   <div className="grid grid-cols-12 mt-2">
                       <div className="col-span-12 md:col-span-3 order-2 md:order-1">
                           <Sidebar categories={testCategories} />

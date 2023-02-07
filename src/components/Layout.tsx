@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { LayoutProps } from '@/types';
 import { Inter } from '@next/font/google';
 

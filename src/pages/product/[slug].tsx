@@ -1,0 +1,137 @@
+import { useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { cartItemsState } from '@/atoms'
+import { useRouter } from "next/router"
+import { Product, Cart, Breadcrumb as bcType } from "@/types"
+import { useKeenSlider } from "keen-slider/react"
+import { ShoppingCartIcon, StarIcon } from "@heroicons/react/24/solid"
+import { addToCartInLocalStorage } from '@/utilities'
+import Breadcrumb from "@/components/Breadcrumb"
+import ThumbnailPlugin from "@/plugins/ThumbnailPlugin"
+import Meta from '@/components/Meta'
+import "keen-slider/keen-slider.min.css"
+
+//test
+import productList from '@/dummyData/products.json'
+import testImage from '@/img/carousel2.jpeg'
+
+ProductPage.Layout = "LWS"
+
+export default function ProductPage(): JSX.Element {
+    const [quantity, setQuantity] = useState(1)
+    const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
+        initial: 0
+    })
+    const [thumbnailRef] = useKeenSlider<HTMLElement>(
+        {
+            initial: 0,
+            slides: {
+                perView: 4,
+                spacing: 10
+            }
+        },
+        [ThumbnailPlugin(instanceRef)]
+    )
+    const router = useRouter()
+    const { slug } = router.query
+    
+    const [cartItems, setCartItems] = useRecoilState(cartItemsState)
+
+    const prodList: Product[] = productList
+
+    function addToCart (itemId: number, qty: number) {
+        let selectedItem = cartItems.filter(cart => cart.id === itemId)
+        let itemPrice = prodList.filter(prod => prod.id === itemId)[0].salePrice
+        if (selectedItem.length > 0) {
+            setCartItems((items): Cart[] => {
+                let newItems = items.map((item) => {
+                    if (item.id === itemId) {
+                        return {
+                            ...item,
+                            qty: selectedItem[0].qty + qty
+                        }
+                    }
+                    return item
+                })
+                addToCartInLocalStorage(newItems)
+                return newItems
+            })
+        } else {
+            const newItem = prodList.filter(item => item.id === itemId)
+            setCartItems(items => {
+                let newRec = [
+                    ...items,
+                    {
+                        id: itemId,
+                        name: newItem[0].name,
+                        qty: qty,
+                        price: itemPrice
+                    }
+                ]
+                addToCartInLocalStorage(newRec)
+                return newRec
+            })
+        }
+    }
+
+    function handleQty (e: React.ChangeEvent<HTMLInputElement>) {
+        setQuantity(parseInt(e.target.value))
+    }
+
+    const selectedProduct = prodList.filter(item => item.slug === slug)[0] || null
+
+    if (selectedProduct === null) return <div className="flex justify-center">Loading...</div>
+
+    const bcTree: bcType[] = [{text: 'Home',url: '/'},{text: 'Product',url: '/product'},{text: selectedProduct.name, url: ''}]
+
+    return (
+        <>
+            <Meta title={ selectedProduct.name + ` | Le REUSSI`} />
+            <div className="lws-container">
+                <div className="lws-container-inner">
+                    <Breadcrumb bcTree={bcTree} />
+                    <div className="grid grid-cols-12 space-x-0 md:space-x-2 mb-3">
+                        <div className="col-span-12 md:col-span-7 order-2 md:order-1 flex flex-col items-start justify-center">
+                            <div className="text-5xl font-bold text-gumbo mb-2">{selectedProduct.name}</div>
+                            <div className="mb-4">
+                                <StarIcon className="inline h-6 w-6 text-pizza-500" />
+                                <StarIcon className="inline h-6 w-6 text-pizza-500" />
+                                <StarIcon className="inline h-6 w-6 text-pizza-500" />
+                                <StarIcon className="inline h-6 w-6 text-pizza-500" />
+                                <StarIcon className="inline h-6 w-6 text-pizza-500" />
+                            </div>
+                            <div className="mb-4">
+                                <span className="text-gray-500 font-bold">PHP</span> <span className="text-3xl font-bold text-slate-700">{ selectedProduct.salePrice === selectedProduct.price ? selectedProduct.price : selectedProduct.salePrice }</span> { selectedProduct.salePrice === selectedProduct.price ? '' : <span className="text-gray-400 line-through">PHP {selectedProduct.price}</span> }
+                            </div>
+                            <div className="mb-5">
+                                <input type="number" min={0} value={quantity} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleQty(e)} className="w-24 p-2 float-left mr-3 outline-none border border-slate-300 rounded-lg" placeholder="Qty" /> <button className="bg-pizza-600 text-white p-2 rounded-3xl flex items-center justify-center" onClick={() => addToCart(selectedProduct.id, quantity)}><ShoppingCartIcon className="inline h-6 w-6" /> Add to cart</button>
+                            </div>
+                        </div>
+                        <div className="col-span-12 md:col-span-5 order-1 md:order-2 mb-2 md:mb-0">
+                            <div ref={sliderRef} className="keen-slider min-h-[250px]">
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>1</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>2</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>3</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>4</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>5</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>6</div>
+                            </div>
+
+                            <div ref={thumbnailRef} className="keen-slider thumbnail min-h-[50px]">
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>1</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>2</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>3</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>4</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>5</div>
+                                <div className="keen-slider__slide" style={{ backgroundImage: `url(${testImage.src})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>6</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mb-3 md:mb-0">
+                        {selectedProduct.description}
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}

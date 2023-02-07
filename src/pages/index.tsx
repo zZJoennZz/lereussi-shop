@@ -3,11 +3,15 @@ import HeroSlider from '@/components/HeroSlider'
 import SearchInHome from '@/components/SearchInHome'
 import CategoryCarousel from '@/components/CategoryCarousel'
 import BeforeFooter from '@/components/BeforeFooter'
+
 import { Category, HeroSliderContent } from '@/types'
+
 import { AcademicCapIcon } from '@heroicons/react/24/solid'
 import carousel1 from '@/img/carousel1.jpg'
 import carousel2 from '@/img/carousel2.jpeg'
+
 export default function Home() {
+
   const testSliderItems: HeroSliderContent[] = [
     {
       backgroundImg: carousel1.src,
@@ -65,6 +69,8 @@ export default function Home() {
       icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
     },
   ]
+
+
   return (
     <>
       <Meta title='Home | Le REUSSI' />

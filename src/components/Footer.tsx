@@ -12,9 +12,9 @@ export default function Footer({ isAuth = true } : FooterProps): JSX.Element {
         <div className="border-t border-gray-300">
             <footer className="w-full overflow-hidden">
                 <div className={styles.footerInfo}>
-                    <div className="mb-3 md:mb-0 col-span-12 md:col-span-4 lg:col-span-5 order-1 md:order-1">
+                    <div className="mb-3 md:mb-0 col-span-12 md:col-span-4 lg:col-span-6 order-1 md:order-1">
                         <div className="mb-4">
-                            <Image src={logo} priority className="w-2/3" alt="Le REUSSI Logo" />
+                            <Image src={logo} priority className="w-1/2" alt="Le REUSSI Logo" />
                         </div>
                         <div className="mb-3 pr-2">
                             <p className="text-justify text-sm text-slate-600">
@@ -44,7 +44,7 @@ export default function Footer({ isAuth = true } : FooterProps): JSX.Element {
                             </svg>
                         </div>
                     </div>
-                    <div className="col-span-12 md:col-span-4 lg:col-span-4 text-slate-600 order-3 md:order-3 mb-3 md:mb-0 ">
+                    <div className="col-span-12 md:col-span-4 lg:col-span-3 text-slate-600 order-3 md:order-3 mb-3 md:mb-0 ">
                         <h2 className="text-sm font-bold">Information</h2>
                         <ul className="pl-2 text-sm mb-3">
                             <li className="mb-1">About Us</li>
