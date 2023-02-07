@@ -21,7 +21,7 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
     // const items: any[] = itemList
 
     useEffect(() => {
-        const cartData = JSON.parse(localStorage.getItem("cart") || "");
+        const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
         if (cartData.length > 0) {
             setCartItems(cartData);
         }
