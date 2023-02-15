@@ -6,3 +6,4 @@ export * from './cart';
 export * from './product';
 export * from './breadcrumbs';
 export * from './auth';
+export * from './pageContent';

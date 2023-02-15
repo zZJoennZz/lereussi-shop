@@ -6,19 +6,14 @@ import CartCard from './CartCard'
 import styles from '@/styles/Menu.module.css'
 import { Cart } from '@/types'
 import logo from '@/img/logo.png'
-import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightOnRectangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightOnRectangleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
 
-import { useRecoilState } from 'recoil'
-import { cartItemsState } from '@/atoms'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { cartItemsState, authState } from '@/atoms'
 
-interface MenuProps { 
-    isAuth: boolean;
-}
-
-export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
+export default function Menu(): JSX.Element {
     const [cartItems, setCartItems] = useRecoilState(cartItemsState)
-
-    // const items: any[] = itemList
+    const isAuth = useRecoilValue(authState)
 
     useEffect(() => {
         const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -36,7 +31,7 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                     </div>
                     <div className="text-right">
                         {
-                            !isAuth ? 
+                            isAuth ? 
                             <>
                                 <input type="checkbox" className="hidden" id={styles["account-drop"]} />
                                 <label htmlFor={styles["account-drop"]}>
@@ -46,8 +41,8 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                                 </label>
                                 <div id={styles["account-menu"]}>
                                     <ul>
-                                        <li>Settings</li>
-                                        <li>Logout</li>
+                                        <li><Link href="/profile">Profile</Link></li>
+                                        <li><Link href="/profile">Logout</Link></li>
                                     </ul>
                                 </div>
                             </>
@@ -64,7 +59,9 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
             <div className={styles.navMenu}>
                 <div className={styles.navMenuInner}>
                     <div id="logo" className={styles.navMenuLogo}>
-                        <Image src={logo} priority alt="Le REUSSI Logo" />
+                        <Link href="/">
+                            <Image src={logo} priority alt="Le REUSSI Logo" />
+                        </Link>
                     </div>
                     <div className={styles.navMenuBar}>
                         <input className='hidden' type="checkbox" id={styles['hamburger']} aria-hidden />
@@ -97,6 +94,7 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                             </div>
                         </label>
                         <div className={styles.cartList}>
+                            <div className="mb-4 text-gray-500 font-bold italic">Main Branch</div>
                             {
                                 cartItems.length > 0 ? cartItems.map((item: Cart) => 
                                     <CartCard cartInfo={item} key={item.id} />
@@ -104,6 +102,7 @@ export default function Menu({ isAuth = true } : MenuProps): JSX.Element {
                                 :
                                 <div className="text-center text-3xl text-gray-400 italic">You cart is empty.</div>
                             }
+                            {cartItems.length > 0 && <Link href="/checkout" className="bg-pizza-700 hover:bg-pizza-600 transition-colors ease-in-out duration-300 text-white text-2xl py-2 px-4 rounded-lg font-bold flex items-center   "><ShoppingBagIcon className="h-6 w-6 md:h-7 md:w-7 inline mr-2" />Checkout</Link>}
                         </div>
                     </div>
                 </div>

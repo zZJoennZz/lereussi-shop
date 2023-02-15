@@ -7,7 +7,7 @@ export default function Contact(): JSX.Element {
     return (
         <>
             <Meta title='Contact Us | Le REUSSI' />
-            <div style={{minHeight: '60vh'}}>
+            <div style={{minHeight: '60vh'}} className="flex items-center">
                 <div className={styles.contact}>
                     <div className={styles.contactInner}>
                         <div className="pl-0 lg:pl-6 w-full">

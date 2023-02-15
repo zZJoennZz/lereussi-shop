@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type { AppProps } from 'next/app'
 import { RecoilRoot } from 'recoil'
 
@@ -16,6 +17,11 @@ const layouts: any = {
 
 export default function App({ Component, pageProps }: AppProps) {
   const router: NextRouter = useRouter()
+  const refCode: any = router.query.promo_code;
+  useEffect(() => {
+    if (refCode) localStorage.setItem('promo_code', refCode)
+  }, [refCode])
+
   //Setting which layout to use
   let comp: any = Component
   const LayoutUsed: any = layouts[comp.Layout] || Layout

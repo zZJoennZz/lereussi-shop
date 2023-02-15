@@ -1,17 +1,39 @@
+import { GetServerSidePropsContext } from 'next'
 import Meta from '@/components/Meta'
 import HeroSlider from '@/components/HeroSlider'
 import SearchInHome from '@/components/SearchInHome'
 import CategoryCarousel from '@/components/CategoryCarousel'
 import BeforeFooter from '@/components/BeforeFooter'
 
-import { Category, HeroSliderContent } from '@/types'
+import { Category, HeroSliderContent, Page } from '@/types'
 
-import { AcademicCapIcon } from '@heroicons/react/24/solid'
 import carousel1 from '@/img/carousel1.jpg'
 import carousel2 from '@/img/carousel2.jpeg'
 
-export default function Home() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const getHomePage = await fetch(`${process.env.API_URL}v1/shop/getpagecontents/?slug=home`, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => res.json())
+    .catch(err => console.log(err))
+  const getCategories = await fetch(`${process.env.API_URL}v1/shop/getproducttypes/`, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => res.json())
+    .catch(err => console.log(err))
+  return {
+    props: {
+      categories: getCategories,
+      pageContent: getHomePage
+    }
+  }
+}
 
+export default function Home({categories, pageContent}: {categories: Category[], pageContent: Page[]}) {
   const testSliderItems: HeroSliderContent[] = [
     {
       backgroundImg: carousel1.src,
@@ -31,53 +53,18 @@ export default function Home() {
     }
   ]
 
-  const testCategories: Category[] = [
-    {
-      id: 1,
-      name: 'Coffee',
-      slug: 'coffee',
-      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
-    },
-    {
-      id: 2,
-      name: 'Hot Tea',
-      slug: 'hottea',
-      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
-    },
-    {
-      id: 1,
-      name: 'Milk Tea',
-      slug: 'milktea',
-      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
-    },
-    {
-      id: 1,
-      name: 'Bread',
-      slug: 'bread',
-      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
-    },
-    {
-      id: 1,
-      name: 'Roll Cake',
-      slug: 'rollcake',
-      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
-    },
-    {
-      id: 1,
-      name: 'Pastries',
-      slug: 'pastries',
-      icon: <AcademicCapIcon className="h-32 w-32 lg:h-52 lg:w-52" />
-    },
-  ]
-
-
   return (
     <>
-      <Meta title='Home | Le REUSSI' />
+      <Meta 
+        title={pageContent[0].pageTitle || "Le REUSSI"}
+        metaDescription={pageContent[0].metaDescription}
+        robots={pageContent[0].metaRobots}
+        keywords={pageContent[0].metaKeywords}
+      />
       <div style={{minHeight: '60vh'}}>
         <HeroSlider sliderContent={testSliderItems} />
         <SearchInHome />
-        <CategoryCarousel categories={testCategories} />
+        <CategoryCarousel categories={categories} />
         <BeforeFooter />
       </div>
     </>

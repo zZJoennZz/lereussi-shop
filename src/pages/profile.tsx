@@ -1,15 +1,37 @@
+import { useEffect, useState } from "react"
+import { useRecoilState } from "recoil"
+import { useRouter } from "next/router"
+import { authState } from "@/atoms"
 import Meta from "@/components/Meta"
-import { PencilSquareIcon } from "@heroicons/react/24/outline"
+
+import { PencilSquareIcon, UserCircleIcon } from "@heroicons/react/24/outline"
 
 export default function Profile(): JSX.Element {
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(true)
+    const isAuth = useRecoilState(authState)
+    const dashboardUrl = process.env.NEXT_PUBLIC_MEMBER_DASHBOARD_URL
+
+    useEffect(() => {
+        const checkIfLoggedIn = () => {
+            if (!isAuth) router.push('/login')
+            else setIsLoading(false)
+        }
+        checkIfLoggedIn()
+        
+    })
+
+    if (isLoading) return <div className="pt-4 text-center text-lg" style={{minHeight: '60vh'}}>Loading...</div>
+    
     return (
         <>
             <Meta title="My Profile | Le REUSSI" />
             
             <div className="container-outer">
                 <div className="container-inner">
-                    <div className="border border-gray-300 text-gray-500 text-2xl font-bold p-2 mb-3">
-                        Your profile settings
+                    <div className="border border-gray-300 p-2 mb-3 flex items-center">
+                        <div className="text-gray-500 text-2xl font-bold flex-grow">Your profile settings</div>
+                        <a href={dashboardUrl} target="_blank" rel="noreferrer" className="float-right cursor-pointer text-base bg-gray-600 hover:bg-gray-500 transition-all ease-in-out duration-300 text-white p-2 rounded-lg flex items-center"><UserCircleIcon className="inline w-5 h-5 mr-2" /> Member Dashboard</a>
                     </div>
                     <div className="text-gray-600 border border-gray-300">
                         <div className="border-b border-gray-300 p-2 font-bold">Personal Information</div>
@@ -56,7 +78,7 @@ export default function Profile(): JSX.Element {
                             </div>
                         </div>
                         <div className="p-2 flex justify-end">
-                            <button className="bg-gumbo text-white px-3 py-2 rounded-2xl flex items-center justify-center"><PencilSquareIcon className="inline w-5 h-5 mr-2" />Save Changes</button>
+                            <button className="bg-gumbo border-2 border-gumbo hover:bg-white hover:text-gumbo transition-all ease-in-out duration-300 text-white px-3 py-2 rounded-lg flex items-center justify-center font-bold"><PencilSquareIcon className="inline w-5 h-5 mr-2" />Save Changes</button>
                         </div>
                     </div>
                 </div>

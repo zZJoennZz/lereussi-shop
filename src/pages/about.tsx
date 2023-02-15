@@ -6,7 +6,7 @@ export default function About() {
     return (
         <>
             <Meta title='About Us | Le REUSSI' />
-            <div style={{minHeight: '60vh'}}>
+            <div style={{minHeight: '60vh'}} className="flex items-center">
                 <div className={styles.aboutSection}>
                     <div className={styles.aboutInnerSection}>
                         <div className="pl-0 lg:pl-6 w-full">

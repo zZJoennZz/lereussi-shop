@@ -1,6 +1,8 @@
+import { OtherMeta } from './meta';
+
 export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  icon?: JSX.Element;
+  product_type: string;
+  product_type_image: string;
+  product_type_description?: string;
+  meta: OtherMeta;
 }

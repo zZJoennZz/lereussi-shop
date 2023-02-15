@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { PhoneIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import styles from '@/styles/Footer.module.css'
@@ -47,14 +48,14 @@ export default function Footer({ isAuth = true } : FooterProps): JSX.Element {
                     <div className="col-span-12 md:col-span-4 lg:col-span-3 text-slate-600 order-3 md:order-3 mb-3 md:mb-0 ">
                         <h2 className="text-sm font-bold">Information</h2>
                         <ul className="pl-2 text-sm mb-3">
-                            <li className="mb-1">About Us</li>
-                            <li className="mb-1">Contact Us</li>
-                            <li className="mb-1">Privacy Policy</li>
-                            <li>Terms & Conditions</li>
+                            <li className="mb-1"><Link href="/about">About Us</Link></li>
+                            <li className="mb-1"><Link href="/contact">Contact Us</Link></li>
+                            <li className="mb-1"><Link href="/privacy-policy">Privacy Policy</Link></li>
+                            <li><Link href="/terms-and-conditions">Terms & Conditions</Link></li>
                         </ul>
-                        <h2 className="text-sm font-bold">My Account</h2>
+                        <h2 className="text-sm font-bold">Account</h2>
                         <ul className="pl-2 text-sm">
-                            <li className="mb-1">Settings</li>
+                            <li className="mb-1"><Link href="/profile">Settings</Link></li>
                             <li className="mb-1">Logout</li>
                         </ul>
                     </div>

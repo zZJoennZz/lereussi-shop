@@ -1,0 +1,42 @@
+{
+  "total_amount": "1000.00",
+  "total_discount": "0.00",
+  "total_fees": "100.00",
+  "order_amount": "1000.00",
+  "details": [
+    { "product_variant": 1, "quantity": 2, "amount": "350.00", "discount": "0.00", "total_amount": "700.00" },
+    { "product_variant": 2, "quantity": 1, "amount": "300.00", "discount": "0.00", "total_amount": "300.00" }
+  ],
+  "fees": [{ "fee_type": "Delivery Fee", "amount": "100.00" }],
+  "customer": {
+    "name": "Krystjyn Enriquez",
+    "email_address": "krystjyn.enriquez@gmail.com",
+    "contact_number": "09959882105",
+    "address": [
+      {
+        "address1": "B15 L1 Silverdale",
+        "address2": "Tangos",
+        "city": "Baliuag",
+        "zip": "3006",
+        "province": null,
+        "country": null,
+        "address_type": "SHIPPING"
+      },
+      {
+        "address1": "B15 L1 Silverdale",
+        "address2": "Tangos",
+        "city": "Baliuag",
+        "zip": "3006",
+        "province": "Bulacan",
+        "country": "Philippines",
+        "address_type": "BILLING"
+      }
+    ]
+  },
+  "account": "",
+  "payment_method": "BANK_TRANSFER",
+  "order_type": "DELIVERY",
+  "attachments": [],
+  "branch": 1,
+  "order_notes": "Test Order Note"
+}

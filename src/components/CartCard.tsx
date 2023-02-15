@@ -12,13 +12,13 @@ import darkChoco from '@/img/dark-choco.jpg'
 export default function CartCard({cartInfo} : {cartInfo: Cart}, props: any): JSX.Element {
   const [ cartItems, setCartItems ] = useRecoilState(cartItemsState)
 
-  function removeItem(itemId: number) {
+  function removeItem(itemId: string) {
     const updatedItem = cartItems.filter(cart => cart.id !== itemId)
     addToCartInLocalStorage(updatedItem)
     setCartItems(updatedItem)
   }
 
-  function updateQty(itemId: number, qty: number) {
+  function updateQty(itemId: string, qty: number) {
     setCartItems((items): Cart[] => {
       let newItems = items.map((item) => {
           if (item.id === itemId) {
@@ -36,12 +36,12 @@ export default function CartCard({cartInfo} : {cartInfo: Cart}, props: any): JSX
 
   return (
     <div className={styles.cartItems} {...props}>
-      <span onClick={() => removeItem(cartInfo.id)} className="absolute top-0 left-0 bg-white rounded-full cursor-pointer">
+      <span onClick={() => removeItem(cartInfo.id)} className="absolute top-0 left-0 z-10 bg-white rounded-full cursor-pointer">
         <XCircleIcon className="inline w-7 h-7 text-red-600" />
       </span>
       <div className="grid grid-cols-12">
-        <div className="col-span-4">
-          <Image src={darkChoco} alt="Dark Chocolate" className="w-full rounded-xl" />
+        <div className="col-span-4 relative" style={{minHeight: "150px"}}>
+          <Image src={cartInfo.img} alt={cartInfo.name} fill className="w-full rounded-xl object-cover" />
         </div>
         <div className="col-span-8 px-4">
           <div className="text-xl font-bold text-slate-600">{cartInfo.name}</div>
