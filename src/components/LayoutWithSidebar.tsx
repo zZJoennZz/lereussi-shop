@@ -1,4 +1,4 @@
-import { LayoutProps, Category } from '@/types';
+import { LayoutProps } from '@/types';
 import { Inter } from '@next/font/google';
 import Sidebar from './Sidebar';
 
@@ -8,9 +8,9 @@ import Footer from './Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function LayoutWithSidebar({ children, isAuth }: LayoutProps) {
+export default function LayoutWithSidebar({ children }: LayoutProps) {
 
-    const testCategories: Category[] = [
+    const testCategories: any[] = [
         {
           id: 1,
           name: 'Coffee',
@@ -46,7 +46,7 @@ export default function LayoutWithSidebar({ children, isAuth }: LayoutProps) {
     return (
         <>
           <div className={inter.className}>
-              <Menu isAuth />
+              <Menu />
               <div className="min-h-screen md:w-5/6 lg:w-3/4 mx-auto p-2 mt-3">
                   <div className="grid grid-cols-12 mt-2">
                       <div className="col-span-12 md:col-span-3 order-2 md:order-1">
@@ -57,7 +57,7 @@ export default function LayoutWithSidebar({ children, isAuth }: LayoutProps) {
                       </div>
                   </div>
               </div>
-              <Footer isAuth />
+              <Footer />
           </div>
         </>
     )

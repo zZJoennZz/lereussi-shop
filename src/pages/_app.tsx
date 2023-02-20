@@ -17,9 +17,9 @@ const layouts: any = {
 
 export default function App({ Component, pageProps }: AppProps) {
   const router: NextRouter = useRouter()
-  const refCode: any = router.query.promo_code;
+  const refCode: any = router.query.code;
   useEffect(() => {
-    if (refCode) localStorage.setItem('promo_code', refCode)
+    if (refCode) localStorage.setItem('code', refCode)
   }, [refCode])
 
   //Setting which layout to use

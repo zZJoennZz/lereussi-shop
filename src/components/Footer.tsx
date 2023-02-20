@@ -4,11 +4,7 @@ import Image from 'next/image'
 import styles from '@/styles/Footer.module.css'
 import logo from '@/img/logo.png'
 
-interface FooterProps {
-    isAuth: boolean;
-}
-
-export default function Footer({ isAuth = true } : FooterProps): JSX.Element {
+export default function Footer(): JSX.Element {
     return (
         <div className="border-t border-gray-300">
             <footer className="w-full overflow-hidden">

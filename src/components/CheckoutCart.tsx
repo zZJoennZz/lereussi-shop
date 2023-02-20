@@ -3,7 +3,7 @@ import { Cart } from "@/types";
 import { phpesos } from "@/utilities";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export default function CheckoutCart({cartItems, removeItem, updateQty}:{cartItems: Cart[], removeItem: any, updateQty: any}): JSX.Element {
+export default function CheckoutCart({isDiscounted, cartItems, removeItem, updateQty}:{isDiscounted: boolean, cartItems: Cart[], removeItem: any, updateQty: any}): JSX.Element {
     return <>
         {cartItems.map(cart => 
             <div key={cart.id} className="mb-2 grid grid-cols-12 border-b border-gray-300 pb-2">
@@ -19,7 +19,7 @@ export default function CheckoutCart({cartItems, removeItem, updateQty}:{cartIte
                 </div>
                 <div className="col-span-2 text-right relative">
                     <div className="text-xs text-gray-500">PHP</div>
-                    <div className="text-pottersclay">{phpesos.format(cart.price * cart.qty || 0)}</div>
+                    <div className="text-pottersclay">{isDiscounted ? <>{phpesos.format(cart.discount * cart.qty || 0)} <span className="line-through text-sm">{phpesos.format(cart.price * cart.qty || 0)}</span></> : cart.price }</div>
                 </div>
             </div>
         )}

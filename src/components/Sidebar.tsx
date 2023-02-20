@@ -2,7 +2,7 @@ import styles from '@/styles/Sidebar.module.css'
 import Link from 'next/link'
 import { Category } from '@/types'
 interface SidebarProps {
-    categories: Category[]
+    categories: any[]
 }
 export default function Sidebar({categories} : SidebarProps ): JSX.Element {
     return (

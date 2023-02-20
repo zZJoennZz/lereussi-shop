@@ -12,9 +12,9 @@ export default function Layout({ children, isAuth }: LayoutProps) {
         <>
             <div className={inter.className}>
                 <div className="min-h-screen">
-                <Menu isAuth />
+                <Menu />
                 {children}
-                <Footer isAuth />
+                <Footer />
                 </div>
             </div>
         </>

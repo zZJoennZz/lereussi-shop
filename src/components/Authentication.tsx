@@ -1,7 +1,7 @@
 import { useEffect } from "react"
-import { useSetRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 import { authState } from "@/atoms"
-// import { isAuth } from "@/utilities"
+import { isAuth } from "@/utilities"
 import { NextComponentType, NextPageContext } from "next/types"
 import { NextRouter } from "next/router"
 
@@ -11,13 +11,19 @@ interface AuthenticationProps {
     router: NextRouter;
 }
 export default function Authentication ({ router, Component, pageProps }: AuthenticationProps): JSX.Element {
-    const setAuthenticationState = useSetRecoilState(authState)
-    
+    const [authenticationState, setAuthenticationState] = useRecoilState(authState)
+
     useEffect(() => {
-        // const tokenIsValid: boolean = isAuth()
-        const tokenIsValid: any = localStorage.getItem('token') || true
-        setAuthenticationState(tokenIsValid)
-    }, [setAuthenticationState])
+        async function checkToken() {
+            const tokenIsValid = await isAuth(localStorage.getItem('token') || '', localStorage.getItem('refresh') || '')
+            if (!tokenIsValid) {
+                setAuthenticationState(false)
+            } else {
+                setAuthenticationState(true)
+            }
+        }
+        checkToken()
+    }, [authenticationState, setAuthenticationState])
     
     return <Component {...pageProps} />
 }

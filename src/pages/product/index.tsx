@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import styles from '@/styles/Product.module.css'
@@ -14,18 +14,19 @@ import { ProductVariant, Breadcrumb as bcType, Cart } from '@/types'
 
 Product.Layout = "LWS"
 
-export async function getServerSideProps(context: GetServerSideProps) {
-    let getProducts = await fetch(`${process.env.API_URL}v1/shop/getproductvariants/`)
-        .then(res => res.json())
-        .catch(err => console.log(err))
-    return {
-        props: {
-            products : getProducts
-        }
-    }
-}
+// export async function getServerSideProps(context: GetServerSideProps) {
+//     let getProducts = await fetch(`${process.env.API_URL}v1/shop/getproductvariants/`)
+//         .then(res => res.json())
+//         .catch(err => console.log(err))
+//     return {
+//         props: {
+//             products : getProducts
+//         }
+//     }
+// }
 
-export default function Product({products} : {products:ProductVariant[]}): JSX.Element {
+export default function Product(): JSX.Element {
+    const [products, setProducts] = useState<ProductVariant[]>([])
     const [sortMode, setSortMode] = useState('default');
     const [currentPage, setCurrentPage] = useState(1)
     const pageSize = 10
@@ -66,7 +67,8 @@ export default function Product({products} : {products:ProductVariant[]}): JSX.E
                         qty: 1,
                         price: itemPrice,
                         img: newItem[0].variant_image,
-                        slug: newItem[0].meta.page_slug
+                        slug: newItem[0].meta.page_slug,
+                        discount: newItem[0].discount
                     }
                 ]
                 addToCartInLocalStorage(newRec)
@@ -92,6 +94,26 @@ export default function Product({products} : {products:ProductVariant[]}): JSX.E
             return a;
         }
     }
+
+    useEffect(() => {
+        let isSub = true
+
+        async function getProducts() {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariants/?branch_id=${localStorage.getItem('branch') || ''}`)
+                .then(async (res) => {
+                    let data = await res.json()
+                    setProducts(data)
+                })
+                .catch(err => alert('Cannot fetch item!'))
+        }
+
+        getProducts()
+
+        return () => {
+            let isSub = false
+        }
+    }, [])
+    
     
     return (
         <>
@@ -117,13 +139,11 @@ export default function Product({products} : {products:ProductVariant[]}): JSX.E
                             {
                                 paginatedProducts.sort((a, b) => {
                                     return sortProducts(a, b)
-                                }).map(item => 
+                                }).map((item: ProductVariant) => 
                                     <div key={item.variant_id} className="col-span-12 md:col-span-6 xl:col-span-4 p-1">
                                         <div className={styles.productsListCard}>
                                             <span className="absolute top-3 right-3">
-                                                <div className={`font-bold text-right ` + styles.productListingPrice}>PHP {item.price === item.discount ? item.price : item.price - item.discount}</div>
-                                                
-                                                {item.price === item.discount ? '' : <div className="text-xs text-right line-through">PHP {item.price}</div> }
+                                                <div className={`font-bold text-right ` + styles.productListingPrice}>PHP {item.price}</div>
                                             </span>
                                             <div className="text-xl text-pizza-600 font-bold" style={{ maxWidth: '150px' }}><Link href={`/product/${item.meta.page_slug}`}>{item.variant_name}</Link></div>
                                             <div className="text-gray-500 text-xs italic mb-3">Product Type: {item.product_type}</div>
@@ -131,12 +151,22 @@ export default function Product({products} : {products:ProductVariant[]}): JSX.E
                                                 <Image src={item.variant_image} fill alt={item.variant_name} className="rounded-xl object-cover" />
                                             </div>
                                             <div className="w-full grid grid-cols-2 pt-2 space-x-1">
-                                                <div>
-                                                    <button onClick={() => addToCart(item.variant_id)} className={styles.addToCartBtn}><ShoppingCartIcon className="inline h-3 w-3 mr-1" />Add to cart</button>
-                                                </div>
-                                                <div>
-                                                    <Link href={`/product/${item.meta.page_slug}`} className={styles.viewDetailBtn}><MagnifyingGlassIcon className="inline h-3 w-3 mr-1" />View Detail</Link>
-                                                </div>
+                                                {
+                                                    item.stocks === 0 ? <>
+                                                        <div className="bg-red-600 text-white text-center col-span-2 text-sm py-1 rounded">
+                                                            Availability: Out of stock!
+                                                        </div>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <div>
+                                                            <button onClick={() => addToCart(item.variant_id)} className={styles.addToCartBtn}><ShoppingCartIcon className="inline h-3 w-3 mr-1" />Add to cart</button>
+                                                        </div>
+                                                        <div>
+                                                            <Link href={`/product/${item.meta.page_slug}`} className={styles.viewDetailBtn}><MagnifyingGlassIcon className="inline h-3 w-3 mr-1" />View Detail</Link>
+                                                        </div>
+                                                    </>
+                                                }
                                             </div>
                                         </div>
                                     </div>

@@ -12,4 +12,5 @@ export interface OtherMeta {
   meta_tag_description?: string;
   page_slug: string;
   product_type?: number;
+  variant?: number;
 }

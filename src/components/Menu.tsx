@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import CartCard from './CartCard'
 
@@ -11,9 +12,14 @@ import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightO
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { cartItemsState, authState } from '@/atoms'
 
+const CartBranchSelection = dynamic(() => import('./CartBranchSelection'),{
+    ssr: false
+})
+
 export default function Menu(): JSX.Element {
+    const [branches, setBranches] = useState([])
     const [cartItems, setCartItems] = useRecoilState(cartItemsState)
-    const isAuth = useRecoilValue(authState)
+    const [isAuth, setIsAuth] = useRecoilState(authState)
 
     useEffect(() => {
         const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -22,6 +28,38 @@ export default function Menu(): JSX.Element {
         }
     }, [setCartItems]);
 
+    useEffect(() => {
+        let isSubscribe = true
+
+        async function getBranches() {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getbranches`)
+                .then(async (res) => {
+                    let data = await res.json()
+                    if (isSubscribe) {
+                        setBranches(data)
+                        if (data.length === 1 && (localStorage.getItem('branch') === undefined || localStorage.getItem('branch') === null || localStorage.getItem('branch') === '')) {
+                            localStorage.setItem('branch', data[0].branch_id);
+                        }
+                    }
+                })
+        }
+
+        getBranches()
+
+        return () => {
+            isSubscribe = false
+        }
+    }, [])
+
+    function branchOnChange(e: any) {
+        console.log(e.target.value)
+    } 
+
+    async function logout() {
+        localStorage.removeItem('token')
+        localStorage.removeItem('refresh')
+        setIsAuth(false)
+    }
     return (
         <>
             <div className={styles.menu}>
@@ -42,9 +80,10 @@ export default function Menu(): JSX.Element {
                                 <div id={styles["account-menu"]}>
                                     <ul>
                                         <li><Link href="/profile">Profile</Link></li>
-                                        <li><Link href="/profile">Logout</Link></li>
+                                        <li className="cursor-pointer" onClick={logout}>Logout</li>
                                     </ul>
                                 </div>
+
                             </>
                             :
                             <>
@@ -94,7 +133,7 @@ export default function Menu(): JSX.Element {
                             </div>
                         </label>
                         <div className={styles.cartList}>
-                            <div className="mb-4 text-gray-500 font-bold italic">Main Branch</div>
+                            {branches && <CartBranchSelection branches={branches} />}
                             {
                                 cartItems.length > 0 ? cartItems.map((item: Cart) => 
                                     <CartCard cartInfo={item} key={item.id} />

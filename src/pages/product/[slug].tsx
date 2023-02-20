@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from "next/router"
@@ -11,9 +11,6 @@ import Breadcrumb from "@/components/Breadcrumb"
 import ThumbnailPlugin from "@/plugins/ThumbnailPlugin"
 import Meta from '@/components/Meta'
 import "keen-slider/keen-slider.min.css"
-
-//test
-import testImage from '@/img/carousel2.jpeg'
 
 ProductPage.Layout = "LWS"
 
@@ -34,6 +31,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 export default function ProductPage({product}: {product: ProductVariant}): JSX.Element {
     const [quantity, setQuantity] = useState(1)
+    const [stocks, setStocks] = useState(0);
     const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
         initial: 0
     })
@@ -74,9 +72,10 @@ export default function ProductPage({product}: {product: ProductVariant}): JSX.E
                         id: product.variant_id,
                         name: product.variant_name,
                         qty: qty,
-                        price: product.price - product.discount,
+                        price: product.price,
                         img: product.variant_image,
-                        slug: product.meta.page_slug
+                        slug: product.meta.page_slug,
+                        discount: product.discount
                     }
                 ]
                 addToCartInLocalStorage(newRec)
@@ -89,10 +88,35 @@ export default function ProductPage({product}: {product: ProductVariant}): JSX.E
         setQuantity(parseInt(e.target.value))
     }
 
+    useEffect(() => {
+        let isSubscribe = true
+
+        async function getStock() {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariant/?` + new URLSearchParams({
+                slug: product.meta.page_slug,
+                branch_id: localStorage.getItem('branch') || ''
+            }))
+                .then(async (res) => {
+                    let data = await res.json()
+                    if (isSubscribe) {
+                        setStocks(data[0].stocks)
+                    }
+                })
+                .catch(err => alert('Cannot fetch item!'))
+        }
+
+        getStock()
+
+        return () => {
+            isSubscribe = false
+        }
+    }, [])
+
     if (!product) return <div className="flex justify-center">Loading...</div>
 
     const bcTree: bcType[] = [{text: 'Home',url: '/'},{text: 'Product',url: '/product'},{text: product.variant_name, url: ''}]
 
+    
     return (
         <>
             <Meta title={ product.variant_name + ` | Le REUSSI`} />
@@ -110,10 +134,13 @@ export default function ProductPage({product}: {product: ProductVariant}): JSX.E
                                 <StarIcon className="inline h-6 w-6 text-pizza-500" />
                             </div>
                             <div className="mb-4">
-                                <span className="text-gray-500 font-bold">PHP</span> <span className="text-3xl font-bold text-slate-700">{ product.price - product.discount }</span> { product.price === product.discount ? '' : <span className="text-gray-400 line-through">PHP {product.price}</span> }
+                                <span className="text-gray-500 font-bold">PHP</span> <span className="text-3xl font-bold text-slate-700">{ product.price }</span>
                             </div>
-                            <div className="mb-5">
+                            <div className="mb-3">
                                 <input type="number" min={0} value={quantity} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleQty(e)} className="w-24 p-2 float-left mr-3 outline-none border border-slate-300 rounded-lg" placeholder="Qty" /> <button className="bg-pizza-600 text-white p-2 rounded-3xl flex items-center justify-center" onClick={() => addToCart(product.variant_id, quantity)}><ShoppingCartIcon className="inline h-6 w-6" /> Add to cart</button>
+                            </div>
+                            <div className="mb-5 text-sm text-gray-600">
+                                <span className="font-bold">Stocks:</span> {stocks}
                             </div>
                         </div>
                         <div className="col-span-12 md:col-span-5 order-1 md:order-2 mb-2 md:mb-0">
