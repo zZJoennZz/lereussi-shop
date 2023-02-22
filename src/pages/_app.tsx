@@ -5,6 +5,8 @@ import { RecoilRoot } from 'recoil'
 import Layout from '@/components/Layout'
 import LayoutWithSidebar from '@/components/LayoutWithSidebar'
 import Authentication from '@/components/Authentication'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
 
 import '@/styles/globals.css'
 import { NextRouter, useRouter } from 'next/router'
@@ -30,6 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <RecoilRoot>
       <LayoutUsed>
         <Authentication router={router} Component={Component} pageProps={pageProps} />
+        <ToastContainer />
       </LayoutUsed>
     </RecoilRoot>
   )

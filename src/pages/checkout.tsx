@@ -12,11 +12,12 @@ import { authState, cartItemsState } from "@/atoms"
 import { Cart, ProductVariant, Breadcrumb as bcType } from "@/types"
 import { addToCartInLocalStorage, phpesos } from "@/utilities"
 
-import { BuildingLibraryIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
+import { ChevronRightIcon } from '@heroicons/react/24/solid'
 
+import { toast } from 'react-toastify'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
-import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+// import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
 interface OrderProdType {
     product_variant: string;
@@ -43,6 +44,8 @@ export default function Checkout(): JSX.Element {
     const [codeDiscount, setCodeDiscount] = useState(false)
     const [discountCode, setDiscountCode] = useState('')
     const [promoCodeId, setPromoCodeId] = useState(0)
+    const [paymentMethod, setPaymentMethod] = useState('')
+    const [orderType, setOrderType] = useState('')
     const [shippingAddress, setShippingAddress] = useState<any>({
         address1: '',
         address2: '',
@@ -70,31 +73,7 @@ export default function Checkout(): JSX.Element {
         })
     }
 
-    async function submitOrder() {
-        for (let key in shippingAddress) {
-            if (shippingAddress[key] === '' || shippingAddress[key] === null || shippingAddress[key] === undefined) {
-                alert('Please complete the address form.')
-                return
-            }
-        }
-
-        for (let key in customerDetail) {
-            if (customerDetail[key] === undefined || customerDetail[key] === '' || customerDetail[key] === null) {
-                alert('Please complete your details.')
-                return
-            }
-        }
-
-        if (orderDate === undefined || String(orderDate) === '' || orderDate === null) {
-            alert('Please select order date and time.')
-            return
-        } 
-
-        if (orderProducts.length === 0) {
-            alert('Your cart is empty. Cannot proceed.')
-            return
-        }
-        setIsOrderSubmitting(true)
+    function prepareOrderForm() {
         let frmData = new FormData()
         frmData.append("total_amount", String(itemTotal))
         const totalDiscount = itemTotal
@@ -110,61 +89,100 @@ export default function Checkout(): JSX.Element {
             "name": customerDetail.firstName + ' ' + customerDetail.lastName,
             "email_address": customerDetail.emailAddress,
             "contact_number": customerDetail.contactNumber,
-            "address": [
-                {
-                    "address1": shippingAddress.address1,
-                    "address2": shippingAddress.address1,
-                    "city": shippingAddress.city,
-                    "zip": shippingAddress.zip,
-                    "province": null,
-                    "country": null,
-                    "address_type": "SHIPPING"
-                },{
-                    "address1": shippingAddress.address1,
-                    "address2": shippingAddress.address1,
-                    "city": shippingAddress.city,
-                    "zip": shippingAddress.zip,
-                    "province": null,
-                    "country": null,
-                    "address_type": "BILLING"
-                }
-            ]
         }
         frmData.append("customer", JSON.stringify(custData))
-        frmData.append("payment_method", "BANK_TRANSFER")
-        frmData.append("order_type", "DELIVERY")
+        frmData.append("address", JSON.stringify(shippingAddress))
+        frmData.append("payment_method", String(paymentMethod))
+        frmData.append("order_type", String(orderType))
         Array.from(receiptFile).forEach((file: any) => {
             let att = new File([file], file.name)
             frmData.append("attachments", att)
         })
-        // frmData.append("attachments", )
         frmData.append("branch", localStorage.getItem("branch") || "0")
         frmData.append("order_notes", orderNotes)
         const convertDate = new Date(orderDate)
         frmData.append("order_date", String(convertDate.toISOString()))
         frmData.append("account", '')
-        
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/createorder/`, {
-            method: 'POST',
-            // headers: {'Content-Type': 'multipart/form-data'},
-            body: frmData
-        })
-            .then(res => {
-                localStorage.setItem('cart', '[]')
-                setCartItems([])
-                localStorage.setItem('code', '')
-                router.push('/order-success')
-            })
-            .catch(err => {
-                alert('Cannot submit your order. Reloading the page...')
-                window.location.reload()
-            })
+        return frmData
+    }
 
-        // let obj: any = {}
-        // frmData.forEach(function(value, key){
-        //     obj[key] = value
-        // });
-        // console.log(obj)
+    function isOrderFormComplete(): boolean {
+        for (let key in shippingAddress) {
+            if ((shippingAddress[key] === '' || shippingAddress[key] === null || shippingAddress[key] === undefined) && orderType === "DELIVERY") {
+                alert('Please complete the address form.')
+                return false
+            }
+        }
+        for (let key in customerDetail) {
+            if (customerDetail[key] === undefined || customerDetail[key] === '' || customerDetail[key] === null) {
+                alert('Please complete your details.')
+                return false
+            }
+        }
+        if (orderDate === undefined || String(orderDate) === '' || orderDate === null) {
+            alert('Please select order date and time.')
+            return false
+        } 
+        if (paymentMethod === undefined || String(paymentMethod) === '' || paymentMethod === null) {
+            alert('Please select payment method.')
+            return false
+        }
+        if (orderType === undefined || String(orderType) === '' || orderType === null) {
+            alert('Please select order type.')
+            return false
+        }
+        if (orderProducts.length === 0) {
+            alert('Your cart is empty. Cannot proceed.')
+            return false
+        }
+
+        return true
+    }
+
+    async function submitOrder() {
+        setIsOrderSubmitting(true)
+        
+        if (isOrderFormComplete()) {
+            let frmData = prepareOrderForm()
+        
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/createorder/`, {
+                method: 'POST',
+                // headers: {'Content-Type': 'multipart/form-data'},
+                body: frmData
+            })
+                .then(async (res) => {
+                    // let data = await res.json()
+                    if (res.status === 201 || res.status === 200) {
+                        localStorage.setItem('cart', '[]')
+                        setCartItems([])
+                        localStorage.setItem('code', '')
+                        router.push('/order-success')
+                    } else {
+                        toast.error('Cannot submit order. Please try again or contact us!', {
+                            position: "top-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            theme: "dark",
+                        })
+                        setIsOrderSubmitting(false)
+                    }
+                })
+                .catch(err => {
+                    toast.error('Cannot submit order. Please try again or contact us!', {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "dark",
+                    })
+                    setIsOrderSubmitting(false)
+                })
+        }
     }
 
     function updateQty(e: any, itemId: string, qty: number) {
@@ -194,6 +212,10 @@ export default function Checkout(): JSX.Element {
         const updatedItem = cartItems.filter(cart => cart.id !== itemId)
         addToCartInLocalStorage(updatedItem)
         setCartItems(updatedItem)
+    }
+
+    function onChangeOrderType(e: any) {
+        setOrderType(e.target.value)
     }
 
     function onChangeText(e: any) {
@@ -239,6 +261,10 @@ export default function Checkout(): JSX.Element {
         
     }
 
+    function onChangePaymentMethod(e: any) {
+        setPaymentMethod(e.target.value)
+    }
+
     useEffect(() => {
         let isSubscribe = true
         if (isSubscribe && isAuth) {
@@ -251,14 +277,15 @@ export default function Checkout(): JSX.Element {
                     contactNumber: savedUser.contact_number,
                 })
     
+                let address = savedUser.address_info.filter((address: any) => address.is_default === true)[0]
                 setShippingAddress({
-                    address1: savedUser.address_info.address1 || '',
-                    address2: savedUser.address_info.address2 || '',
-                    city: savedUser.address_info.city || '',
-                    province: savedUser.address_info.province || '',
-                    country: savedUser.address_info.country || '',
-                    zip: savedUser.address_info.zip || '',
-                    address_type: savedUser.address_info.address_type || '',
+                    address1: address.address1 || '',
+                    address2: address.address2 || '',
+                    city: address.city || '',
+                    province: address.province || '',
+                    country: address.country || '',
+                    zip: address.zip || '',
+                    address_type: address.address_type || '',
                 })
             }
         }
@@ -423,18 +450,29 @@ export default function Checkout(): JSX.Element {
                                 />
                                 <button className="float-right absolute right-3 top-3 py-1 px-2 text-sm rounded text-white bg-pizza-700 hover:bg-pizza-600 transition ease-in-out duration-300" onClick={confirmCode}>Apply</button>
                             </div>
-                            <div className="mt-4 text-sm text-slate-500 mb-3 border-b border-gray-300">Order Date and Time</div>
-                            <div className="w-full">
-                                <DatePicker 
-                                    selected={orderDate} 
-                                    onChange={(date: Date) => setOrderDate(date)} 
-                                    showTimeSelect
-                                    timeFormat="HH:mm"
-                                    timeIntervals={15}
-                                    timeCaption="time"
-                                    dateFormat="MM/d/yyyy h:mm aa"
-                                    className="textfield"
-                                />
+                            <div className="mt-4 text-sm text-slate-500 mb-3 border-b border-gray-300">Order Detail</div>
+                            <div className="w-full grid grid-cols-1 md:grid-cols-2 space-x-0 md:space-x-2">
+                                <div>
+                                    <span className="text-sm text-gray-600">Order Date and Time</span>
+                                    <DatePicker 
+                                        selected={orderDate} 
+                                        onChange={(date: Date) => setOrderDate(date)} 
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        timeCaption="time"
+                                        dateFormat="MM/d/yyyy h:mm aa"
+                                        className="textfield mt-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="order-type" className="text-sm text-gray-600">Order Type</label>
+                                    <select className="w-full textfield mt-2" value={orderType} onChange={onChangeOrderType} name="order-type" id="order-type">
+                                        <option disabled value="">Select</option>
+                                        <option value="DELIVERY">For delivery</option>
+                                        <option value="PICKUP">For pickup</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="float-right mt-3">
                                 <Link href={isAuth ? '/profile' : '/login'} className="text-sm text-pizza-700 hover:text-pizza-600 transition-colors ease-in-out duration-300">{isAuth ? 'Edit Profile' : 'Have an account? Login here!'}</Link>
@@ -488,77 +526,82 @@ export default function Checkout(): JSX.Element {
                                         readOnly={isAuth ? true : false} />
                                 </div>
                             </div>
-                            <div className="mt-2 text-sm text-slate-500 mb-3 border-b border-gray-300">Shipping Address</div>
-                            <div className="grid grid-cols-1 md:grid-cols-3">
-                                <div className="p-1">
-                                    <input 
-                                        type="text" 
-                                        className="textfield" 
-                                        placeholder="Steet/Block/Building/Address 1" 
-                                        id="address1"
-                                        name="address1"
-                                        value={shippingAddress.address1}
-                                        onChange={onChangeAddress}
-                                        readOnly={isAuth ? true : false} />
-                                </div>
-                                <div className="p-1">
-                                    <input 
-                                        type="text" 
-                                        className="textfield" 
-                                        placeholder="Barangay, City/Address 2" 
-                                        id="address2"
-                                        name="address2"
-                                        value={shippingAddress.address2}
-                                        onChange={onChangeAddress}
-                                        readOnly={isAuth ? true : false} />
-                                </div>
-                                <div className="p-1">
-                                    <input 
-                                        type="text" 
-                                        className="textfield" 
-                                        placeholder="City"
-                                        id="city"
-                                        name="city"
-                                        value={shippingAddress.city}
-                                        onChange={onChangeAddress}
-                                        readOnly={isAuth ? true : false} />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3">
-                                <div className="p-1">
-                                    <input 
-                                        type="text" 
-                                        className="textfield" 
-                                        placeholder="Zip Code" 
-                                        id="zip"
-                                        name="zip"
-                                        value={shippingAddress.zip}
-                                        onChange={onChangeAddress}
-                                        readOnly={isAuth ? true : false} />
-                                </div>
-                                <div className="p-1">
-                                    <input 
-                                        type="text" 
-                                        className="textfield" 
-                                        placeholder="Province" 
-                                        id="province"
-                                        name="province"
-                                        value={shippingAddress.province}
-                                        onChange={onChangeAddress}
-                                        readOnly={isAuth ? true : false} />
-                                </div>
-                                <div className="p-1">
-                                    <input 
-                                        type="text" 
-                                        className="textfield" 
-                                        placeholder="Country" 
-                                        id="country"
-                                        name="country"
-                                        value={shippingAddress.country}
-                                        onChange={onChangeAddress}
-                                        readOnly={isAuth ? true : false} />
-                                </div>
-                            </div>
+                            {
+                                orderType === "DELIVERY" && 
+                                <>
+                                    <div className="mt-2 text-sm text-slate-500 mb-3 border-b border-gray-300">Shipping Address</div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3">
+                                        <div className="p-1">
+                                            <input 
+                                                type="text" 
+                                                className="textfield" 
+                                                placeholder="Steet/Block/Building/Address 1" 
+                                                id="address1"
+                                                name="address1"
+                                                value={shippingAddress.address1}
+                                                onChange={onChangeAddress}
+                                                readOnly={isAuth ? true : false} />
+                                        </div>
+                                        <div className="p-1">
+                                            <input 
+                                                type="text" 
+                                                className="textfield" 
+                                                placeholder="Barangay, City/Address 2" 
+                                                id="address2"
+                                                name="address2"
+                                                value={shippingAddress.address2}
+                                                onChange={onChangeAddress}
+                                                readOnly={isAuth ? true : false} />
+                                        </div>
+                                        <div className="p-1">
+                                            <input 
+                                                type="text" 
+                                                className="textfield" 
+                                                placeholder="City"
+                                                id="city"
+                                                name="city"
+                                                value={shippingAddress.city}
+                                                onChange={onChangeAddress}
+                                                readOnly={isAuth ? true : false} />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3">
+                                        <div className="p-1">
+                                            <input 
+                                                type="text" 
+                                                className="textfield" 
+                                                placeholder="Zip Code" 
+                                                id="zip"
+                                                name="zip"
+                                                value={shippingAddress.zip}
+                                                onChange={onChangeAddress}
+                                                readOnly={isAuth ? true : false} />
+                                        </div>
+                                        <div className="p-1">
+                                            <input 
+                                                type="text" 
+                                                className="textfield" 
+                                                placeholder="Province" 
+                                                id="province"
+                                                name="province"
+                                                value={shippingAddress.province}
+                                                onChange={onChangeAddress}
+                                                readOnly={isAuth ? true : false} />
+                                        </div>
+                                        <div className="p-1">
+                                            <input 
+                                                type="text" 
+                                                className="textfield" 
+                                                placeholder="Country" 
+                                                id="country"
+                                                name="country"
+                                                value={shippingAddress.country}
+                                                onChange={onChangeAddress}
+                                                readOnly={isAuth ? true : false} />
+                                        </div>
+                                    </div>
+                                </>
+                            }
                             {/* <div className="mt-2 float-right text-sm text-slate-500">
                                 <div className="flex justify-end items-center">
                                     <input type="checkbox" name="" id="sameAddress" className="mr-1" /> <label htmlFor="sameAddress">Same as shipping address</label>
@@ -605,7 +648,20 @@ export default function Checkout(): JSX.Element {
                                     Payment
                                 </div>
                                 <div className="border-r border-l border-b border-gray-300 p-2">
-                                    <div className="text-sm text-gray-500 mb-2"><span className="font-bold">Payment Method:</span> <span className="float-right"><div className="flex items-center"><BuildingLibraryIcon className="w-4 h-4 inline mr-2" /> Bank Transfer</div></span></div>
+                                    <div className="text-sm text-gray-500 flex items-center">
+                                        <div className="flex-grow">   
+                                            <span className="font-bold">Payment Method:</span> 
+                                        </div>
+                                        <span className="float-right">
+                                            <div className="flex items-center">
+                                                <select className="textfield" name="payment_method" value={paymentMethod} id="payment_method" onChange={(e: any) => onChangePaymentMethod(e)}>
+                                                    <option value="" disabled>Select method</option>
+                                                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                                                    <option value="GCASH">GCash</option>
+                                                </select>
+                                            </div>
+                                        </span>
+                                    </div>
                                     <div className="text-sm text-gray-500 mb-2"><span className="font-bold">Transfer Receipt:</span></div>
                                     <div className="w-full flex items-center justify-center mb-2">
                                         <label htmlFor="attachment">

@@ -9,7 +9,7 @@ import { Cart } from '@/types'
 import logo from '@/img/logo.png'
 import { EnvelopeIcon, ChevronDownIcon, ShoppingCartIcon, XMarkIcon, ArrowRightOnRectangleIcon, ShoppingBagIcon } from '@heroicons/react/24/outline'
 
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { cartItemsState, authState } from '@/atoms'
 
 const CartBranchSelection = dynamic(() => import('./CartBranchSelection'),{
