@@ -19,14 +19,6 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 // import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
-interface OrderProdType {
-    product_variant: string;
-    quantity: number;
-    amount: number;
-    discount: number;
-    total_amount: number;
-}
-
 export default function Checkout(): JSX.Element {
     const router = useRouter()
     const isAuth = useRecoilValue(authState)
@@ -82,7 +74,7 @@ export default function Checkout(): JSX.Element {
         const orderAmount = (itemTotal - totalDiscount) + deliveryFee
         frmData.append("order_amount", String(orderAmount))
         frmData.append("details", JSON.stringify(orderProducts))
-        const feesData = [{"fee_type": "Delivery Fee", "amount": deliveryFee}]
+        const feesData = [{"fee_type": "Delivery Fee", "amount": orderType === "DELIVERY" ? deliveryFee : 0}]
         frmData.append("fees", JSON.stringify(feesData))
         frmData.append("code", String(promoCodeId))
         const custData = {
@@ -107,6 +99,12 @@ export default function Checkout(): JSX.Element {
     }
 
     function isOrderFormComplete(): boolean {
+        const currTime = new Date()
+        if (orderDate <= currTime) {
+            toast.error('Please don\'t select past time/date.')
+            return false;
+        }
+
         for (let key in shippingAddress) {
             if ((shippingAddress[key] === '' || shippingAddress[key] === null || shippingAddress[key] === undefined) && orderType === "DELIVERY") {
                 alert('Please complete the address form.')
@@ -131,6 +129,7 @@ export default function Checkout(): JSX.Element {
             alert('Please select order type.')
             return false
         }
+
         if (orderProducts.length === 0) {
             alert('Your cart is empty. Cannot proceed.')
             return false
@@ -182,6 +181,7 @@ export default function Checkout(): JSX.Element {
                     })
                     setIsOrderSubmitting(false)
                 })
+            setIsOrderSubmitting(false)
         }
     }
 
@@ -265,6 +265,17 @@ export default function Checkout(): JSX.Element {
         setPaymentMethod(e.target.value)
     }
 
+    function onChangeOrderDate(date: Date) {
+        const currTime = new Date()
+        if (date <= currTime) {
+            toast.error('Please don\'t select past time/date.')
+        }
+        setOrderDate(date)
+    }
+
+    //TODO
+    //refactor
+    //useEffects section
     useEffect(() => {
         let isSubscribe = true
         if (isSubscribe && isAuth) {
@@ -279,13 +290,13 @@ export default function Checkout(): JSX.Element {
     
                 let address = savedUser.address_info.filter((address: any) => address.is_default === true)[0]
                 setShippingAddress({
-                    address1: address.address1 || '',
-                    address2: address.address2 || '',
-                    city: address.city || '',
-                    province: address.province || '',
-                    country: address.country || '',
-                    zip: address.zip || '',
-                    address_type: address.address_type || '',
+                    address1: address ? address.address1 : '',
+                    address2: address ? address.address2 : '',
+                    city: address ? address.city : '',
+                    province: address ? address.province : '',
+                    country: address ? address.country : '',
+                    zip: address ? address.zip : '',
+                    address_type: address ? address.address_type : '',
                 })
             }
         }
@@ -346,11 +357,16 @@ export default function Checkout(): JSX.Element {
                 })
             
         }
-        getDeliveryFee()
+        if (isSubscribed) {
+            setDeliveryFee(0)
+        }
+        if (orderType === "DELIVERY") {
+            getDeliveryFee()
+        }
         return () => {
             isSubscribed = false
         }
-    }, [])
+    }, [orderType])
 
     useEffect(() => {
         let isSubscribed = true
@@ -456,13 +472,16 @@ export default function Checkout(): JSX.Element {
                                     <span className="text-sm text-gray-600">Order Date and Time</span>
                                     <DatePicker 
                                         selected={orderDate} 
-                                        onChange={(date: Date) => setOrderDate(date)} 
+                                        onChange={(date: Date) => onChangeOrderDate(date)} 
                                         showTimeSelect
                                         timeFormat="HH:mm"
                                         timeIntervals={15}
                                         timeCaption="time"
                                         dateFormat="MM/d/yyyy h:mm aa"
                                         className="textfield mt-2"
+                                        minDate={new Date()}
+                                        minTime={new Date()}
+                                        maxTime={new Date('8:00 PM')}
                                     />
                                 </div>
                                 <div>
@@ -475,7 +494,7 @@ export default function Checkout(): JSX.Element {
                                 </div>
                             </div>
                             <div className="float-right mt-3">
-                                <Link href={isAuth ? '/profile' : '/login'} className="text-sm text-pizza-700 hover:text-pizza-600 transition-colors ease-in-out duration-300">{isAuth ? 'Edit Profile' : 'Have an account? Login here!'}</Link>
+                                <Link href={isAuth ? String(process.env.NEXT_PUBLIC_MEMBER_DASHBOARD_URL) : '/login'} className="text-sm text-pizza-700 hover:text-pizza-600 transition-colors ease-in-out duration-300">{isAuth ? 'Edit Profile' : 'Have an account? Login here!'}</Link>
                             </div>
                             <div className="mt-4 text-sm text-slate-500 mb-3 border-b border-gray-300">Customer Details</div>
                             <div className="grid grid-cols-1 md:grid-cols-2">
@@ -540,7 +559,7 @@ export default function Checkout(): JSX.Element {
                                                 name="address1"
                                                 value={shippingAddress.address1}
                                                 onChange={onChangeAddress}
-                                                readOnly={isAuth ? true : false} />
+                                                />
                                         </div>
                                         <div className="p-1">
                                             <input 
@@ -551,7 +570,7 @@ export default function Checkout(): JSX.Element {
                                                 name="address2"
                                                 value={shippingAddress.address2}
                                                 onChange={onChangeAddress}
-                                                readOnly={isAuth ? true : false} />
+                                                />
                                         </div>
                                         <div className="p-1">
                                             <input 
@@ -562,7 +581,7 @@ export default function Checkout(): JSX.Element {
                                                 name="city"
                                                 value={shippingAddress.city}
                                                 onChange={onChangeAddress}
-                                                readOnly={isAuth ? true : false} />
+                                                />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-3">
@@ -575,7 +594,7 @@ export default function Checkout(): JSX.Element {
                                                 name="zip"
                                                 value={shippingAddress.zip}
                                                 onChange={onChangeAddress}
-                                                readOnly={isAuth ? true : false} />
+                                                />
                                         </div>
                                         <div className="p-1">
                                             <input 
@@ -586,7 +605,7 @@ export default function Checkout(): JSX.Element {
                                                 name="province"
                                                 value={shippingAddress.province}
                                                 onChange={onChangeAddress}
-                                                readOnly={isAuth ? true : false} />
+                                                />
                                         </div>
                                         <div className="p-1">
                                             <input 
@@ -597,7 +616,7 @@ export default function Checkout(): JSX.Element {
                                                 name="country"
                                                 value={shippingAddress.country}
                                                 onChange={onChangeAddress}
-                                                readOnly={isAuth ? true : false} />
+                                                />
                                         </div>
                                     </div>
                                 </>
@@ -641,7 +660,7 @@ export default function Checkout(): JSX.Element {
                                 <div className="border-r border-l border-b border-gray-300 p-2">
                                     <div className="text-sm text-gray-500 mb-2"><span className="font-bold">Order Amount:</span> <span className="float-right">{phpesos.format(origPriceTotal)}</span></div>
                                     <div className="text-sm text-gray-500 mb-2"><span className="font-bold">Total Discount:</span> <span className="float-right">({phpesos.format(origPriceTotal - itemTotal)})</span></div>
-                                    <div className="text-sm text-gray-500 mb-2"><span className="font-bold">Delivery Fee:</span> <span className="float-right">{phpesos.format(deliveryFee)}</span></div>
+                                    {orderType === "DELIVERY" ? <div className="text-sm text-gray-500 mb-2"><span className="font-bold">Delivery Fee:</span> <span className="float-right">{phpesos.format(deliveryFee)}</span></div> : ""}
                                     <div className="text-gray-500"><span className="font-bold">Total Amount:</span> <span className="float-right font-bold">{phpesos.format(itemTotal + deliveryFee)}</span></div>
                                 </div>
                                 <div className="border-r border-l border-b border-gray-300 text-gray-500 p-2">

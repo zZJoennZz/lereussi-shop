@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from "next/router"
-import { cartItemsState } from '@/atoms'
+import { branchState, cartItemsState } from '@/atoms'
 import { ProductVariant, Cart, Breadcrumb as bcType } from "@/types"
 import { useKeenSlider } from "keen-slider/react"
 import { ShoppingCartIcon, StarIcon } from "@heroicons/react/24/solid"
@@ -30,6 +30,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function ProductPage({product}: {product: ProductVariant}): JSX.Element {
+    const selectedBranch = useRecoilValue(branchState)
     const [quantity, setQuantity] = useState(1)
     const [stocks, setStocks] = useState(0);
     const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
@@ -94,7 +95,7 @@ export default function ProductPage({product}: {product: ProductVariant}): JSX.E
         async function getStock() {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariant/?` + new URLSearchParams({
                 slug: product.meta.page_slug,
-                branch_id: localStorage.getItem('branch') || ''
+                branch_id: selectedBranch
             }))
                 .then(async (res) => {
                     let data = await res.json()
@@ -110,7 +111,7 @@ export default function ProductPage({product}: {product: ProductVariant}): JSX.E
         return () => {
             isSubscribe = false
         }
-    }, [])
+    }, [selectedBranch])
 
     if (!product) return <div className="flex justify-center">Loading...</div>
 

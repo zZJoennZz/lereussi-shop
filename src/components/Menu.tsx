@@ -79,7 +79,7 @@ export default function Menu(): JSX.Element {
                                 </label>
                                 <div id={styles["account-menu"]}>
                                     <ul>
-                                        <li><Link href="/profile">Profile</Link></li>
+                                        <li><Link href={String(process.env.NEXT_PUBLIC_MEMBER_DASHBOARD_URL)}>Profile</Link></li>
                                         <li className="cursor-pointer" onClick={logout}>Logout</li>
                                     </ul>
                                 </div>

@@ -1,4 +1,4 @@
-import { GetServerSideProps } from 'next'
+// import { GetServerSideProps } from 'next'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -6,8 +6,8 @@ import styles from '@/styles/Product.module.css'
 import Meta from "@/components/Meta"
 import Breadcrumb from "@/components/Breadcrumb"
 import Pagination from '@/components/Pagination'
-import { useRecoilState } from 'recoil'
-import { cartItemsState } from '@/atoms'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { branchState, cartItemsState } from '@/atoms'
 import { ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { addToCartInLocalStorage, paginate } from '@/utilities'
 import { ProductVariant, Breadcrumb as bcType, Cart } from '@/types'
@@ -26,6 +26,7 @@ Product.Layout = "LWS"
 // }
 
 export default function Product(): JSX.Element {
+    const selectedBranch = useRecoilValue(branchState)
     const [products, setProducts] = useState<ProductVariant[]>([])
     const [sortMode, setSortMode] = useState('default');
     const [currentPage, setCurrentPage] = useState(1)
@@ -99,10 +100,12 @@ export default function Product(): JSX.Element {
         let isSub = true
 
         async function getProducts() {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariants/?branch_id=${localStorage.getItem('branch') || ''}`)
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariants/?branch_id=${selectedBranch}`)
                 .then(async (res) => {
-                    let data = await res.json()
-                    setProducts(data)
+                    if (isSub) {
+                        let data = await res.json()
+                        setProducts(data)
+                    }
                 })
                 .catch(err => alert('Cannot fetch item!'))
         }
@@ -110,9 +113,9 @@ export default function Product(): JSX.Element {
         getProducts()
 
         return () => {
-            let isSub = false
+            isSub = false
         }
-    }, [])
+    }, [selectedBranch])
     
     
     return (

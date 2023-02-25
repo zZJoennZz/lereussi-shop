@@ -8,6 +8,7 @@ import { PencilSquareIcon, UserCircleIcon } from "@heroicons/react/24/outline"
 
 export default function Profile(): JSX.Element {
     const router = useRouter()
+    const [profile, setProfile] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const isAuth = useRecoilState(authState)
     const dashboardUrl = process.env.NEXT_PUBLIC_MEMBER_DASHBOARD_URL
@@ -18,8 +19,11 @@ export default function Profile(): JSX.Element {
             else setIsLoading(false)
         }
         checkIfLoggedIn()
+    }, [])
+
+    useEffect(() => {
         
-    })
+    }, [])
 
     if (isLoading) return <div className="pt-4 text-center text-lg" style={{minHeight: '60vh'}}>Loading...</div>
     
