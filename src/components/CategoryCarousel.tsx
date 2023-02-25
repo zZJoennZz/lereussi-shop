@@ -35,7 +35,7 @@ export default function CategoryCarousel({ categories }: { categories: Category[
                                 <div className="keen-slider__slide bg-ebb hover:bg-pizza-600 transition-colors ease-in-out duration-300 rounded-3xl text-slate-700 flex items-center justify-center flex-col">
                                     <div className="h-16 w-16 relative mt-3">
                                         <Image 
-                                            src={cat.product_type_image} 
+                                            src={cat.product_type_image || ''} 
                                             alt={cat.product_type}
                                             fill
                                             className="object-contain"

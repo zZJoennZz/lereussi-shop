@@ -151,7 +151,7 @@ export default function Product(): JSX.Element {
                                             <div className="text-xl text-pizza-600 font-bold" style={{ maxWidth: '150px' }}><Link href={`/product/${item.meta.page_slug}`}>{item.variant_name}</Link></div>
                                             <div className="text-gray-500 text-xs italic mb-3">Product Type: {item.product_type}</div>
                                             <div className="w-full h-52 relative">
-                                                <Image src={item.variant_image} fill alt={item.variant_name} className="rounded-xl object-cover" />
+                                                <Image src={item.variant_image || ''} fill alt={item.variant_name} className="rounded-xl object-cover" />
                                             </div>
                                             <div className="w-full grid grid-cols-2 pt-2 space-x-1">
                                                 {
