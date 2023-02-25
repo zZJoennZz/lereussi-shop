@@ -101,37 +101,93 @@ export default function Checkout(): JSX.Element {
     function isOrderFormComplete(): boolean {
         const currTime = new Date()
         if (orderDate <= currTime) {
-            toast.error('Please don\'t select past time/date.')
+            toast.error('Invalid time! Please don\'t select time from the past.', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            })
             return false;
         }
 
         for (let key in shippingAddress) {
             if ((shippingAddress[key] === '' || shippingAddress[key] === null || shippingAddress[key] === undefined) && orderType === "DELIVERY") {
-                alert('Please complete the address form.')
+                toast.error('Please complete the address form.', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "dark",
+                })
                 return false
             }
         }
         for (let key in customerDetail) {
             if (customerDetail[key] === undefined || customerDetail[key] === '' || customerDetail[key] === null) {
-                alert('Please complete your details.')
+                toast.error('Please complete your details.', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "dark",
+                })
                 return false
             }
         }
         if (orderDate === undefined || String(orderDate) === '' || orderDate === null) {
-            alert('Please select order date and time.')
+            toast.error('Please select order date and time.', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            })
             return false
         } 
         if (paymentMethod === undefined || String(paymentMethod) === '' || paymentMethod === null) {
-            alert('Please select payment method.')
+            toast.error('Please select payment method.', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            })
             return false
         }
         if (orderType === undefined || String(orderType) === '' || orderType === null) {
-            alert('Please select order type.')
+            toast.error('Please select order type.', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            })
             return false
         }
 
         if (orderProducts.length === 0) {
-            alert('Your cart is empty. Cannot proceed.')
+            toast.error('Your cart is empty.', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            })
             return false
         }
 
@@ -181,6 +237,8 @@ export default function Checkout(): JSX.Element {
                     })
                     setIsOrderSubmitting(false)
                 })
+            setIsOrderSubmitting(false)
+        } else {
             setIsOrderSubmitting(false)
         }
     }
