@@ -1,9 +1,9 @@
 export interface HeroSliderContent {
   name: string;
-  backgroundImage: string;
+  image: string;
   promoText: string;
-  header: string;
-  subHeader: string;
+  title: string;
+  subTitle: string;
   buttonText: string;
   buttonLink: string;
 }

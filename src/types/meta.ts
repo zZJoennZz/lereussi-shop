@@ -4,6 +4,7 @@ export interface MetaType {
   keywords?: string;
   author?: string;
   robots?: string;
+  other?: string;
 }
 
 export interface OtherMeta {
