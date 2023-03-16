@@ -6,8 +6,6 @@ import CategoryCarousel from '@/components/CategoryCarousel';
 import BeforeFooter from '@/components/BeforeFooter';
 import Testimonials from '@/components/Testimonials';
 
-import { Category, HeroSliderContent, Page } from '@/types';
-
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const getHomePage = await fetch(`${process.env.API_URL}v1/shop/getpagecontents/?page_slug=home`, {
     headers: {
@@ -24,15 +22,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 
+  const getProducts = await fetch(`${process.env.API_URL}v1/shop/getproductvariants/`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
+
   return {
     props: {
       pageContent: getHomePage,
       categories: getCategories,
+      products: getProducts,
     },
   };
 }
 
-export default function Home({ pageContent, categories }: any) {
+export default function Home({ pageContent, categories, products }: any) {
   return (
     <>
       <Meta
@@ -48,7 +55,7 @@ export default function Home({ pageContent, categories }: any) {
               <div key={component.name}>
                 {component.name === 'HeroCarousel' && <HeroSlider sliderContent={component.section_component} />}
                 {component.name === 'SearchInHome' && <SearchInHome />}
-                {component.name === 'CategoriesCarousel' && <CategoryCarousel categories={categories} />}
+                {component.name === 'CategoriesCarousel' && <CategoryCarousel products={products} categories={categories} />}
                 {component.name === 'Testimonials' && <Testimonials testimonials={component.section_component} />}
               </div>
             );

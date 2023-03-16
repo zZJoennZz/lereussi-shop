@@ -92,7 +92,7 @@
 }
 
 .cartList {
-  @apply py-10 flex justify-start flex-col items-center overflow-auto fixed bg-white h-screen w-screen z-30 top-0 right-0 translate-x-full md:w-3/5 transition-all ease-in-out duration-300;
+  @apply py-10 flex justify-start flex-col items-center overflow-auto fixed bg-white h-screen w-screen z-30 top-0 right-0 translate-x-full transition-all ease-in-out duration-300;
 }
 
 #cart-button:checked ~ .cartList {

@@ -33,7 +33,12 @@ export default function Testimonials({ testimonials }: any): JSX.Element {
             {testimonials.map((testimonial: any) => {
               return (
                 <div key={testimonial.title} className="keen-slider__slide flex">
-                  <TestimonialCard image={testimonial.image} name={testimonial.title} testimonial={testimonial.description1} />
+                  <TestimonialCard
+                    image={testimonial.image}
+                    title={testimonial.subTitle}
+                    name={testimonial.title}
+                    testimonial={testimonial.description1}
+                  />
                 </div>
               );
             })}
@@ -57,7 +62,7 @@ export default function Testimonials({ testimonials }: any): JSX.Element {
   );
 }
 
-function TestimonialCard({ image, name, testimonial }: any): JSX.Element {
+function TestimonialCard({ image, name, testimonial, title }: any): JSX.Element {
   return (
     <div className={styles.card}>
       <div className="bg-pizza-600 h-96 object-cover relative rounded-3xl shadow-xl shadow-slate-300 overflow-hidden mb-10 md:mb-0">
@@ -65,7 +70,8 @@ function TestimonialCard({ image, name, testimonial }: any): JSX.Element {
       </div>
       <div className="flex items-center md:pl-10">
         <div>
-          <div className="text-3xl font-bold mb-4">{name}</div>
+          <div className="text-3xl font-bold mb-2">{name}</div>
+          <div className="text-xl italic text-gray-600   mb-4">{title}</div>
           <div className="text-2xl">{testimonial}</div>
         </div>
       </div>

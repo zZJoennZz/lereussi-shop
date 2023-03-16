@@ -159,14 +159,21 @@ export default function ProductPage({ product }: { product: ProductVariant }): J
                   min={0}
                   value={quantity}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleQty(e)}
-                  className="w-24 p-2 float-left mr-3 outline-none border border-slate-300 rounded-lg"
+                  className={`w-24 p-2 float-left mr-3 outline-none border border-slate-300 rounded-lg ${stocks < 1 ? 'hidden' : ''}`}
                   placeholder="Qty"
                 />{' '}
                 <button
-                  className="bg-pizza-600 text-white p-2 rounded-3xl flex items-center justify-center"
+                  className={`text-white p-2 rounded-3xl flex items-center justify-center ${stocks < 1 ? 'bg-gray-400' : 'bg-pizza-600'}`}
                   onClick={() => addToCart(product.variant_id, quantity)}
+                  disabled={stocks < 1 ? true : false}
                 >
-                  <ShoppingCartIcon className="inline h-6 w-6" /> Add to cart
+                  {stocks < 1 ? (
+                    'Out of Stock'
+                  ) : (
+                    <>
+                      <ShoppingCartIcon className="inline h-6 w-6" /> Add to cart
+                    </>
+                  )}
                 </button>
               </div>
               <div className="mb-5 text-sm text-gray-600">

@@ -12,6 +12,7 @@ import { ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outli
 import { addToCartInLocalStorage, paginate } from '@/utilities';
 import { ProductVariant, Breadcrumb as bcType, Cart } from '@/types';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 Product.Layout = 'LWS';
 
@@ -27,6 +28,9 @@ Product.Layout = 'LWS';
 // }
 
 export default function Product(): JSX.Element {
+  const router = useRouter();
+  const category: any = router.query.category;
+  const search: any = router.query.search;
   const selectedBranch = useRecoilValue(branchState);
   const [products, setProducts] = useState<ProductVariant[]>([]);
   const [sortMode, setSortMode] = useState('default');
@@ -156,6 +160,11 @@ export default function Product(): JSX.Element {
               {paginatedProducts
                 .sort((a, b) => {
                   return sortProducts(a, b);
+                })
+                .filter((prod) => {
+                  let cat = category ? prod.product_type_slug.includes(category) : true;
+                  let srch = search ? prod.variant_name.includes(search) : true;
+                  return category ? cat : srch;
                 })
                 .map((item: ProductVariant) => (
                   <div key={item.variant_id} className="col-span-12 md:col-span-6 xl:col-span-4 p-1">
