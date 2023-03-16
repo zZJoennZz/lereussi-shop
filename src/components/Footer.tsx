@@ -3,8 +3,16 @@ import { PhoneIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
 import styles from '@/styles/Footer.module.css';
 import logo from '@/img/logo.png';
+import { authState } from '@/atoms';
+import { useSetRecoilState } from 'recoil';
 
 export default function Footer(): JSX.Element {
+  const setIsAuth = useSetRecoilState(authState);
+  async function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh');
+    setIsAuth(false);
+  }
   return (
     <div className="border-t border-gray-300">
       <footer className="w-full overflow-hidden">
@@ -85,7 +93,9 @@ export default function Footer(): JSX.Element {
               <li className="mb-1">
                 <Link href={String(process.env.NEXT_PUBLIC_MEMBER_DASHBOARD_URL)}>Settings</Link>
               </li>
-              <li className="mb-1">Logout</li>
+              <li className="mb-1 cursor-pointer" onClick={() => logout()}>
+                Logout
+              </li>
             </ul>
           </div>
           <div className="col-span-12 md:col-span-4 lg:col-span-3 text-slate-600 order-2 md:order-4">
