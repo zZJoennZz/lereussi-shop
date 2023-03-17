@@ -3,6 +3,8 @@ import Image from 'next/image';
 import styles from '@/styles/Contact.module.css';
 import contactBg from '@/img/contact-bg.png';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 export async function getServerSideProps() {
   const getContactPage = await fetch(`${process.env.API_URL}v1/shop/getpagecontents/?page_slug=contact`, {
@@ -45,6 +47,64 @@ export default function Contact({ pageContent }: any): JSX.Element {
 }
 
 function ContactForm(): JSX.Element {
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+
+  async function submitInquiry(e: any) {
+    e.preventDefault();
+    let frmData = new FormData();
+    frmData.append('subject', emailSubject);
+    frmData.append('email_address', emailAddress);
+    frmData.append('message', emailMessage);
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/createinquiry/`, {
+      method: 'POST',
+      body: frmData,
+    })
+      .then(async (res) => {
+        const data: any = await res.json();
+        setEmailAddress('');
+        setEmailMessage('');
+        setEmailSubject('');
+        toast.success(data.detail, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'light',
+        });
+      })
+      .catch((err) => {
+        toast.error('Cannot submit inquiry. Please try again or contact us!', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'dark',
+        });
+      });
+  }
+
+  function onChangeText(e: any) {
+    switch (e.target.name) {
+      case 'subject':
+        setEmailSubject(e.target.value);
+        break;
+      case 'email_address':
+        setEmailAddress(e.target.value);
+        break;
+      case 'message':
+        setEmailMessage(e.target.value);
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 py-10">
@@ -52,7 +112,7 @@ function ContactForm(): JSX.Element {
           <h1 className="text-2xl md:text-5xl font-bold mb-3 text-slate-600">
             <span>Contact Us</span>
           </h1>
-          <form action="">
+          <form onSubmit={submitInquiry}>
             <div className="mb-3">
               <div className="mb-1">
                 <label htmlFor="" className="text-slate-500">
@@ -60,7 +120,15 @@ function ContactForm(): JSX.Element {
                 </label>
               </div>
               <div>
-                <input type="text" placeholder="Hey! How can we help you?" className="textfield" />
+                <input
+                  type="text"
+                  name="subject"
+                  onChange={onChangeText}
+                  value={emailSubject}
+                  placeholder="Hey! How can we help you?"
+                  className="textfield"
+                  required
+                />
               </div>
             </div>
             <div className="mb-3">
@@ -70,7 +138,15 @@ function ContactForm(): JSX.Element {
                 </label>
               </div>
               <div>
-                <input type="text" placeholder="Let us get back to you!" className="textfield" />
+                <input
+                  type="email"
+                  name="email_address"
+                  onChange={onChangeText}
+                  value={emailAddress}
+                  placeholder="Let us get back to you!"
+                  className="textfield"
+                  required
+                />
               </div>
             </div>
             <div className="mb-3">
@@ -80,7 +156,14 @@ function ContactForm(): JSX.Element {
                 </label>
               </div>
               <div>
-                <textarea placeholder="Tell us more!" className="textfield"></textarea>
+                <textarea
+                  name="message"
+                  onChange={onChangeText}
+                  value={emailMessage}
+                  placeholder="Tell us more!"
+                  required
+                  className="textfield"
+                ></textarea>
               </div>
             </div>
             <div className="flex justify-end">

@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -15,5 +16,7 @@ const nextConfig = {
   },
   output: 'standalone',
 };
+
+dotenv.config();
 
 module.exports = nextConfig;

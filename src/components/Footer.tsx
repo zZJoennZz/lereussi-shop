@@ -107,7 +107,7 @@ export default function Footer(): JSX.Element {
                   </div>
                   <div className="text-sm">
                     <div className="font-bold">Contact Us</div>
-                    <div>900 123456789</div>
+                    <div>0917 113 3615</div>
                   </div>
                 </div>
                 <div className="flex mb-3 items-center justify-start">
@@ -116,7 +116,7 @@ export default function Footer(): JSX.Element {
                   </div>
                   <div className="text-sm">
                     <div className="font-bold">Email</div>
-                    <div>info@lereussi.com</div>
+                    <div>lereussisupport@lereussicakes.com</div>
                   </div>
                 </div>
                 <div className="flex items-center justify-start">
@@ -125,7 +125,7 @@ export default function Footer(): JSX.Element {
                   </div>
                   <div className="text-sm">
                     <div className="font-bold">Location</div>
-                    <div>Idk St., Quezon City</div>
+                    <div>163 Marseilla Street, Bagbag II, Cavite 4106 Rosario</div>
                   </div>
                 </div>
               </div>
