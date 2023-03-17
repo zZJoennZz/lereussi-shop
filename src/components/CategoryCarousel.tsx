@@ -29,12 +29,12 @@ export default function CategoryCarousel({ categories, products }: { categories:
         <div ref={ref} className="keen-slider py-10">
           {categories.length > 2
             ? categories.map((cat: Category) => (
-                <a href={cat.meta.page_slug} key={cat.meta.id}>
-                  <div className="keen-slider__slide bg-ebb hover:bg-pizza-600 transition-colors ease-in-out duration-300 rounded-3xl text-slate-700 flex items-center justify-center flex-col shadow-lg shadow-pizza-400">
-                    <div className="h-16 w-16 relative mt-3">
-                      <Image src={cat.product_type_image || ''} alt={cat.product_type} fill className="object-contain" />
+                <a href={`/product/?category=${cat.meta.page_slug}`} key={cat.meta.id}>
+                  <div className="keen-slider__slide bg-ebb hover:bg-pizza-600 transition-colors ease-in-out duration-300 rounded-3xl text-slate-700 flex items-center justify-center flex-col shadow-lg shadow-pizza-400 w-36 h-64 group">
+                    <Image src={cat.product_type_image || ''} alt={cat.product_type} fill className="object-cover" />
+                    <div className="text-center absolute bottom-0 my-3 z-10 text-white bg-pizza-700 w-full transition-all ease-in-out duration-300">
+                      <div className="font-bold text-xl">{cat.product_type}</div>
                     </div>
-                    <div className="text-center font-bold my-3">{cat.product_type}</div>
                   </div>
                 </a>
               ))
