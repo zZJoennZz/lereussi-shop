@@ -27,7 +27,7 @@ export default function CategoryCarousel({ categories, products }: { categories:
       <div className={styles.categoryCarouselInner}>
         <div className="section-title text-center mb-10 text-gray-600">Shop by {categories.length > 2 ? 'Category' : 'Product'}</div>
         <div ref={ref} className="keen-slider py-10">
-          {categories.length > 2
+          {categories.length >= 2
             ? categories.map((cat: Category) => (
                 <a href={`/product/?category=${cat.meta.page_slug}`} key={cat.meta.id}>
                   <div className="keen-slider__slide bg-ebb hover:bg-pizza-600 transition-colors ease-in-out duration-300 rounded-3xl text-slate-700 flex items-center justify-center flex-col shadow-lg shadow-pizza-400 w-36 h-64 group">
