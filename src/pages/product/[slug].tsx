@@ -12,6 +12,7 @@ import ThumbnailPlugin from '@/plugins/ThumbnailPlugin';
 import Meta from '@/components/Meta';
 import 'keen-slider/keen-slider.min.css';
 import { toast } from 'react-toastify';
+import parse from 'html-react-parser';
 
 ProductPage.Layout = 'LWS';
 
@@ -212,7 +213,7 @@ export default function ProductPage({ product }: { product: ProductVariant }): J
           </div>
           <div className="mb-3 md:mb-0">
             <div className="text-sm uppercase text-gray-400 font-bold">Description</div>
-            {product.variant_description}
+            {parse(product.variant_description || '')}
           </div>
         </div>
       </div>

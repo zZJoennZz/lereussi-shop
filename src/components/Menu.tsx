@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -120,16 +121,16 @@ export default function Menu(): JSX.Element {
               <div className={styles.navLinks}>
                 <ul>
                   <li>
-                    <Link href="/">Home</Link>
+                    <a href="/">Home</a>
                   </li>
                   <li>
-                    <Link href="/product">Products</Link>
+                    <a href="/product">Products</a>
                   </li>
                   <li>
-                    <Link href="/about">About Us</Link>
+                    <a href="/about">About Us</a>
                   </li>
                   <li>
-                    <Link href="/contact">Contact Us</Link>
+                    <a href="/contact">Contact Us</a>
                   </li>
                 </ul>
               </div>
@@ -157,22 +158,22 @@ export default function Menu(): JSX.Element {
               ) : (
                 <>
                   <div className="text-center text-3xl text-gray-400 italic mb-3">You cart is empty.</div>
-                  <Link
+                  <a
                     href="/product"
                     className="bg-pizza-700 hover:bg-pizza-600 transition-all ease-in-out duration-300 text-white text-2xl py-2 px-3 rounded-xl cursor-pointer"
                   >
                     Continue shopping
-                  </Link>
+                  </a>
                 </>
               )}
               {cartItems.length > 0 && (
-                <Link
+                <a
                   href="/checkout"
                   className="bg-pizza-700 hover:bg-pizza-600 transition-colors ease-in-out duration-300 text-white text-2xl py-2 px-4 rounded-lg font-bold flex items-center"
                 >
                   <ShoppingBagIcon className="h-6 w-6 md:h-7 md:w-7 inline mr-2" />
                   Checkout
-                </Link>
+                </a>
               )}
             </div>
           </div>

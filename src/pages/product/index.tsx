@@ -47,7 +47,6 @@ export default function Product(): JSX.Element {
     { text: 'Home', url: '/' },
     { text: 'Product', url: '' },
   ];
-
   function addToCart(itemId: string) {
     let selectedItem = cartItems.filter((cart) => cart.id === itemId);
     let itemPrice = products.filter((prod) => prod.variant_id === itemId)[0].price;

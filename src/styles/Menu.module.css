@@ -35,8 +35,7 @@
 }
 
 .navLinks {
-  @apply w-screen h-screen fixed top-0 left-0 -translate-x-full transition-all ease-in-out duration-300 md:transition-none md:translate-x-0 z-30 flex items-center justify-center md:block md:relative md:left-auto md:top-auto md:bg-transparent md:w-auto md:h-auto md:z-auto;
-  background-color: rgba(255, 255, 255, 0.6);
+  @apply w-screen h-screen fixed top-0 left-0 -translate-x-full transition-all ease-in-out duration-300 md:transition-none md:translate-x-0 z-30 flex items-center justify-center md:block md:relative md:left-auto md:top-auto md:bg-transparent md:w-auto md:h-auto md:z-auto bg-white;
 }
 
 .navLinks ul {
@@ -92,7 +91,7 @@
 }
 
 .cartList {
-  @apply py-10 flex justify-start flex-col items-center overflow-auto fixed bg-white h-screen w-screen z-30 top-0 right-0 translate-x-full transition-all ease-in-out duration-300;
+  @apply py-10 flex justify-start flex-col items-center overflow-auto fixed bg-white h-screen w-full md:w-1/2 z-30 top-0 right-0 translate-x-full transition-all ease-in-out duration-300;
 }
 
 #cart-button:checked ~ .cartList {

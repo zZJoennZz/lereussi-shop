@@ -1,0 +1,7 @@
+.table td {
+  @apply py-2;
+}
+
+.table thead {
+  @apply border-b border-slate-300;
+}
