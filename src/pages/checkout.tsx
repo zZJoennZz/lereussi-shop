@@ -23,16 +23,23 @@ export default function Checkout(): JSX.Element {
   const router = useRouter();
   const isAuth = useRecoilValue(authState);
   const [cartItems, setCartItems] = useRecoilState(cartItemsState);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours() + 1).padStart(2, '0');
+  const minutes = String('00');
+  const datetime = `${year}-${month}-${day} ${hours}:${minutes}`;
 
   //page states
   const [isOrderSubmitting, setIsOrderSubmitting] = useState(false);
   const [origPriceTotal, setOrigPriceTotal] = useState(0);
-  const [orderDate, setOrderDate] = useState(new Date());
+  const [orderDate, setOrderDate] = useState(new Date(datetime));
   const [itemTotal, setItemTotal] = useState(0);
   const [receiptPreview, setReceiptPreview] = useState('');
   const [receiptFile, setReceiptFile] = useState<any>([]);
   const [deliveryFee, setDeliveryFee] = useState(0);
-  const [orderProducts, setOrderProducts] = useState<any[]>([]);
+  // const [orderProducts, setOrderProducts] = useState<any[]>([]);
   const [codeDiscount, setCodeDiscount] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [promoCodeId, setPromoCodeId] = useState(0);
@@ -65,7 +72,7 @@ export default function Checkout(): JSX.Element {
     });
   }
 
-  function prepareOrderForm() {
+  function prepareOrderForm(prodList: any[]) {
     let frmData = new FormData();
     frmData.append('total_amount', String(itemTotal));
     const totalDiscount = itemTotal;
@@ -73,7 +80,7 @@ export default function Checkout(): JSX.Element {
     frmData.append('total_fees', String(deliveryFee));
     const orderAmount = itemTotal - totalDiscount + deliveryFee;
     frmData.append('order_amount', String(orderAmount));
-    frmData.append('details', JSON.stringify(orderProducts));
+    frmData.append('details', JSON.stringify(prodList));
     const feesData = [{ fee_type: 'Delivery Fee', amount: orderType === 'DELIVERY' ? deliveryFee : 0 }];
     frmData.append('fees', JSON.stringify(feesData));
     frmData.append('code', String(promoCodeId));
@@ -178,27 +185,92 @@ export default function Checkout(): JSX.Element {
       return false;
     }
 
-    if (orderProducts.length === 0) {
-      toast.error('Your cart is empty.', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'dark',
-      });
-      return false;
-    }
+    // if (orderProducts.length === 0) {
+    //   toast.error('Your cart is empty.', {
+    //     position: 'top-center',
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     theme: 'dark',
+    //   });
+    //   return false;
+    // }
 
     return true;
   }
 
+  function confirmProducts(): any[] {
+    let prod: any = [];
+    cartItems.forEach(async (item) => {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariant/?slug=${item.slug}`)
+        .then(async (res) => {
+          let data = await res.json();
+          prod.push({
+            variant: data[0].variant_id,
+            quantity: item.qty,
+            amount: data[0].price,
+            discount: data[0].discount,
+            total_amount: item.qty * (!codeDiscount ? data[0].price : data[0].discount),
+          });
+        })
+        .catch((err) => {
+          alert('Invalid products, please refresh the page.');
+        });
+    });
+    return prod;
+  }
+
   async function submitOrder() {
     setIsOrderSubmitting(true);
+    let prod: any = [];
+    // cartItems.forEach(async (item) => {
+    //   await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariant/?slug=${item.slug}`)
+    //     .then(async (res) => {
+    //       let data = await res.json();
+    //       prod.push({
+    //         variant: data[0].variant_id,
+    //         quantity: item.qty,
+    //         amount: data[0].price,
+    //         discount: data[0].discount,
+    //         total_amount: item.qty * (!codeDiscount ? data[0].price : data[0].discount),
+    //       });
+    //       // console.log(prod);
+    //     })
+    //     .catch((err) => {
+    //       prod = [];
+    //       alert('Invalid products, please refresh the page.');
+    //     });
+    // });
+    for (const item of cartItems) {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariant/?slug=${item.slug}`)
+        .then(async (res) => {
+          let data = await res.json();
+          prod.push({
+            variant: data[0].variant_id,
+            quantity: item.qty,
+            amount: data[0].price,
+            discount: data[0].discount,
+            total_amount: item.qty * (!codeDiscount ? data[0].price : data[0].discount),
+          });
+          // console.log(prod);
+        })
+        .catch((err) => {
+          prod = [];
+          alert('Invalid products, please refresh the page.');
+        });
+    }
 
+    // console.log(prod);
+    if (prod.length <= 0) {
+      alert('Your cart is empty.');
+      return;
+    }
+
+    // return;
     if (isOrderFormComplete()) {
-      let frmData = prepareOrderForm();
+      let frmData = prepareOrderForm(prod);
 
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/createorder/`, {
         method: 'POST',
@@ -456,36 +528,14 @@ export default function Checkout(): JSX.Element {
     };
   }, []);
 
-  useEffect(() => {
-    let isSubscribe = true;
-    async function confirmProducts() {
-      cartItems.forEach(async (item) => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}v1/shop/getproductvariant/?slug=${item.slug}`)
-          .then(async (res) => {
-            let data = await res.json();
-            if (isSubscribe) {
-              setOrderProducts((o) => {
-                return [
-                  ...o,
-                  {
-                    variant: data[0].variant_id,
-                    quantity: item.qty,
-                    amount: data[0].price,
-                    discount: data[0].discount,
-                    total_amount: item.qty * (!codeDiscount ? data[0].price : data[0].discount),
-                  },
-                ];
-              });
-            }
-          })
-          .catch((err) => alert('Invalid products, please refresh the page.'));
-      });
-    }
-    confirmProducts();
-    return () => {
-      isSubscribe = false;
-    };
-  }, [cartItems, codeDiscount]);
+  // useEffect(() => {
+  //   let isSubscribe = true;
+
+  //   confirmProducts();
+  //   return () => {
+  //     isSubscribe = false;
+  //   };
+  // }, [cartItems, codeDiscount]);
 
   const bcTree: bcType[] = [
     { text: 'Home', url: '/' },
@@ -536,7 +586,7 @@ export default function Checkout(): JSX.Element {
                     onChange={(date: Date) => onChangeOrderDate(date)}
                     showTimeSelect
                     timeFormat="HH:mm"
-                    timeIntervals={15}
+                    timeIntervals={60}
                     timeCaption="time"
                     dateFormat="MM/d/yyyy h:mm aa"
                     className="textfield mt-2"
@@ -830,9 +880,9 @@ export default function Checkout(): JSX.Element {
                       <button
                         className="bg-pizza-700 hover:bg-pizza-600 transition-all ease-in-out duration-300 text-white cursor-pointer rounded-3xl px-3 py-2 text-sm font-bold flex items-center group w-full md:w-auto justify-end md:justify-center"
                         onClick={submitOrder}
-                        disabled={orderProducts.length > 0 ? false : true}
+                        disabled={cartItems.length > 0 ? false : true}
                       >
-                        {orderProducts.length || cartItems.length > 0 ? 'Submit Order' : 'Empty Cart'}{' '}
+                        {cartItems.length > 0 ? 'Submit Order' : 'Empty Cart'} {/* Submit Order */}
                         <ChevronRightIcon className="w-4 h-4 inline transition-all ease-in-out duration-300 ml-1 md:-ml-3 opacity-100 md:opacity-0 group-hover:opacity-100 group-hover:ml-1" />
                       </button>
                     </>

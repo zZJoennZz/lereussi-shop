@@ -161,19 +161,17 @@ export default function Product(): JSX.Element {
                   return sortProducts(a, b);
                 })
                 .filter((prod) => {
-                  let cat = category ? prod.product_type_slug.includes(category) : true;
-                  let srch = search ? prod.variant_name.includes(search) : true;
+                  let cat = category ? prod.product_type_slug.toLowerCase().includes(category.toLowerCase()) : true;
+                  let srch = search ? prod.variant_name.toLowerCase().includes(search.toLowerCase()) : true;
                   return category ? cat : srch;
                 })
                 .map((item: ProductVariant) => (
                   <div key={item.variant_id} className="col-span-12 md:col-span-6 xl:col-span-4 p-1">
                     <div className={styles.productsListCard}>
-                      <span className="absolute top-3 right-3">
-                        <div className={`font-bold text-right ` + styles.productListingPrice}>PHP {item.price}</div>
-                      </span>
-                      <div className="text-xl text-pizza-600 font-bold" style={{ maxWidth: '150px' }}>
+                      <div className="text-lg text-pizza-600 font-bold" style={{ maxWidth: '150px' }}>
                         <Link href={`/product/${item.meta.page_slug}`}>{item.variant_name}</Link>
                       </div>
+                      <div className={`font-bold text-sm mb-3 text-right ` + styles.productListingPrice}>PHP {item.price}</div>
                       <div className="text-gray-500 text-xs italic mb-3">Product Type: {item.product_type}</div>
                       <div className="w-full h-52 relative">
                         <Image src={item.variant_image || ''} fill alt={item.variant_name} className="rounded-xl object-cover" />

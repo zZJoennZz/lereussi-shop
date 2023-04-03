@@ -14,15 +14,15 @@ export default function BeforeFooter(): JSX.Element {
                         Lorem ipsum dolor sit amet, consectetur adipiscing
                     </div> */}
         </div>
-        <div className="group cursor-pointer">
+        {/* <div className="group cursor-pointer">
           <div className="text-gumbo group-hover:text-slate-600 transition-all ease-in-out duration-300">
             <GiftIcon className="w-20 h-20 mx-auto mb-4" />
           </div>
           <div className="font-bold">Vouchers</div>
-          {/* <div className="text-slate-500">
+          <div className="text-slate-500">
                         Lorem ipsum dolor sit amet, consectetur adipiscing
-                    </div> */}
-        </div>
+                    </div> 
+        </div> */}
         <div className="group cursor-pointer">
           <div className="text-gumbo group-hover:text-slate-600 transition-all ease-in-out duration-300">
             <ShoppingBagIcon className="w-20 h-20 mx-auto mb-4" />
