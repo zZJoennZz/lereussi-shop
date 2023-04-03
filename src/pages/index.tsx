@@ -61,7 +61,7 @@ export default function Home({ pageContent, categories, products }: any) {
             );
           })}
 
-        <BeforeFooter />
+        {/* <BeforeFooter /> */}
       </div>
     </>
   );
