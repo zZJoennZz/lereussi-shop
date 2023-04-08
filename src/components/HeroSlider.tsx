@@ -22,40 +22,48 @@ export default function HeroSlider({ sliderContent }: { sliderContent: HeroSlide
     <>
       <div className={styles['navigation-wrapper']}>
         <div ref={sliderRef} className="keen-slider">
-          {sliderContent.map((slider) => (
-            <div
-              key={`slider${slider.image}`}
-              className="keen-slider__slide bg-no-repeat grid grid-cols-1 md:grid-cols-2"
-              style={{
-                backgroundImage: `linear-gradient(0deg, rgba(23, 23, 23, 0.5), rgba(153, 140, 116, 0.5)), url(${slider.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                height: '50vh',
-              }}
-            >
-              <div className="h-0 md:h-auto order-2 md:order-1"></div>
-              <div className="flex flex-col order-1 md:order-2 justify-center p-4 md:p-0">
-                <div className="flex mb-3">
-                  <div className="border rounded-xl text-base md:text-xl py-2 p-4 mb-3 text-white">{slider.promoText}</div>
+          {sliderContent.map(
+            (slider) =>
+              slider.buttonLink &&
+              slider.buttonText &&
+              slider.image &&
+              slider.promoText &&
+              slider.subTitle &&
+              slider.title && (
+                <div
+                  key={`slider${slider.image}`}
+                  className="keen-slider__slide bg-no-repeat grid grid-cols-1 md:grid-cols-2"
+                  style={{
+                    backgroundImage: `linear-gradient(0deg, rgba(23, 23, 23, 0.5), rgba(153, 140, 116, 0.5)), url(${slider.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    height: '50vh',
+                  }}
+                >
+                  <div className="h-0 md:h-auto order-2 md:order-1"></div>
+                  <div className="flex flex-col order-1 md:order-2 justify-center p-4 md:p-0">
+                    <div className="flex mb-3">
+                      <div className="border rounded-xl text-base md:text-xl py-2 p-4 mb-3 text-white">{slider.promoText}</div>
+                    </div>
+                    <div className="md:text-5xl text-3xl font-bold mb-2 text-white">{slider.title}</div>
+                    <div className="text-lg md:text-2xl mb-8 text-white">{slider.subTitle}</div>
+                    <div>
+                      <a
+                        className="text-base md:text-xl bg-white text-pizza-800 hover:bg-slate-300 transition-all ease-in-out duration-300 py-2 md:py-3 px-3 md:px-5 rounded-xl"
+                        href={slider.buttonLink}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {slider.buttonText}
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <div className="md:text-5xl text-3xl font-bold mb-2 text-white">{slider.title}</div>
-                <div className="text-lg md:text-2xl mb-8 text-white">{slider.subTitle}</div>
-                <div>
-                  <a
-                    className="text-base md:text-xl bg-white text-pizza-800 hover:bg-slate-300 transition-all ease-in-out duration-300 py-2 md:py-3 px-3 md:px-5 rounded-xl"
-                    href={slider.buttonLink}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {slider.buttonText}
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
+              )
+          )}
         </div>
-        {loaded && instanceRef.current && (
+        {loaded && instanceRef.current && instanceRef.current.track.details && (
           <>
             <Arrow onClick={() => instanceRef.current?.prev()} instanceRef left disabled={currentSlide === 0} />
             <Arrow
@@ -67,7 +75,7 @@ export default function HeroSlider({ sliderContent }: { sliderContent: HeroSlide
           </>
         )}
       </div>
-      {loaded && instanceRef.current && (
+      {loaded && instanceRef.current && instanceRef.current.track.details && (
         <div className={styles.dots}>
           {Array.from(Array(instanceRef.current.track.details.slides.length).keys()).map((idx) => {
             return (
